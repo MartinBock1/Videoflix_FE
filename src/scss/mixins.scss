@@ -1,0 +1,29 @@
+// Flexbox Mixins
+
+@mixin flex-center($ai: center, $jc: center, $dir: row, $gap: 0) {
+    display: flex;
+    align-items: $ai;
+    justify-content: $jc;
+    flex-direction: $dir;
+    
+    @if $gap != 0 {
+        gap: $gap;
+    }
+}
+
+// Shorthand Mixins für häufige Kombinationen
+@mixin flex-center-center {
+    @include flex-center(center, center);
+}
+
+@mixin flex-center-between {
+    @include flex-center(center, space-between);
+}
+
+@mixin flex-center-start {
+    @include flex-center(center, flex-start);
+}
+
+@mixin flex-center-end {
+    @include flex-center(center, flex-end);
+}

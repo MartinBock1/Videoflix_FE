@@ -1,0 +1,51 @@
+@import './../../../styles.scss';
+
+:host {
+    display: block;
+    width: 100%;
+}
+
+.main_header {
+    padding: 48px;
+    position: relative;
+}
+
+.main_header a:last-child  {
+    cursor: pointer;
+}
+
+.logo img {
+    height: 28px;
+}
+
+@media only screen and (max-width: 1024px) {
+    .main_header {
+        padding: 16px 32px;
+    }
+}
+
+.main_header img:nth-child(1){
+    display: none;
+}
+.main_header img:nth-child(2){
+    display: block;
+}
+
+@media only screen and (max-width: 769px) {
+    .main_header {
+        padding: 16px 32px;
+    }
+
+    .main_header img:nth-child(1){
+        display: block;
+    }
+    .main_header img:nth-child(2){
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .main_header {
+        gap: 16px;
+    }
+}
