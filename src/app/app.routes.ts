@@ -5,7 +5,7 @@ import { Register } from './main/auth/register/register';
 import { Activate } from './main/auth/activate/activate';
 import { ForgotPassword } from './main/auth/forgot-password/forgot-password';
 import { ConfirmPassword } from './main/auth/confirm-password/confirm-password';
-import { authGuard } from './main/auth/auth-guard';
+import { AuthGuard } from './shared/guards/auth.guard';
 
 export const routes: Routes = [
   // Landing Page (Öffentlich zugänglich)
@@ -14,7 +14,8 @@ export const routes: Routes = [
   // Auth-Routen (Öffentlich - für nicht eingeloggte Benutzer)
   { path: 'auth/login', component: Login },
   { path: 'auth/register', component: Register },
-  { path: 'auth/activate/:token', component: Activate },
+  { path: 'auth/activate', component: Activate },
+  { path: 'auth/activate.html', component: Activate },  // Kompatibilität mit Backend Links
   { path: 'auth/forgot-password', component: ForgotPassword },
   { path: 'auth/confirm-password/:token', component: ConfirmPassword },
 
@@ -23,9 +24,9 @@ export const routes: Routes = [
   // { path: 'privacy', component: PrivacyComponent },
   // { path: 'imprint', component: ImprintComponent },
 
-  // Geschützte Routen würden hier mit authGuard kommen
-  // { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
-  // { path: 'videos', component: VideoListComponent, canActivate: [authGuard] },
+  // Geschützte Routen würden hier mit AuthGuard kommen
+  // { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+  // { path: 'videos', component: VideoListComponent, canActivate: [AuthGuard] },
   
   // Fallback - redirect to home
   { path: '**', redirectTo: '' }
