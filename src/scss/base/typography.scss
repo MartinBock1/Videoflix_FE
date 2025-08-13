@@ -1,0 +1,98 @@
+/* Typography */
+
+* {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+h1 {
+    font-size: 40px;
+    font-weight: 700;
+}
+
+h2, .fs_l {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+label,
+h3,
+.fs_m {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+p {
+    word-break: break-word;
+}
+
+a,
+p,
+button,
+input,
+ul,
+option,
+select,
+textarea {
+    font-size: 18px;
+    font-weight: 400;
+}
+
+/* Responsive Typography */
+@media screen and (max-width: 769px) {
+    h1 {
+        font-size: 32px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    label,
+    h3,
+    .fs_m {
+        font-size: 18px;
+    }
+
+    a,
+    p,
+    button,
+    input,
+    ul,
+    option,
+    select,
+    textarea {
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    h1 {
+        font-size: 28px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    label,
+    h3,
+    .fs_m {
+        font-size: 16px;
+    }
+
+    a,
+    p,
+    button,
+    input,
+    ul,
+    option,
+    select,
+    textarea {
+        font-size: 14px;
+    }
+}

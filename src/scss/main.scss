@@ -1,0 +1,14 @@
+// ===========================
+// Main SCSS Entry Point
+// ===========================
+// This file imports all SCSS modules in the correct order
+
+// 1. Base - Fundamental styles
+@import 'base/fonts';
+@import 'base/typography';
+
+// 2. Utils - Mixins, functions, and utilities
+@import 'utils/mixins';
+
+// 3. Components - Component-specific styles
+@import 'components/header_footer';
