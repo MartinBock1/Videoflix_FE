@@ -1,9 +1,92 @@
 <app-header actionLink="/auth/login" actionText="Log in"></app-header>
 
 <main class="content flex-center">
-    <form class="std_form">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="std_form" novalidate>
         <h1>Sign up</h1>
-        <p>Register works! TODO: Implement registration form</p>
+        
+        <!-- Email Field -->
+        <div class="form_group" [class.error]="isFieldInvalid('email')">
+            <img src="/icons/mail.png" alt="Icon">
+            <input 
+                type="email" 
+                id="email" 
+                formControlName="email"
+                placeholder="Email"
+                autocomplete="email"
+                required>
+            <label for="email">Email</label>
+            @if (isFieldInvalid('email')) {
+                <p class="error_label">Please enter a valid email address.</p>
+            }
+        </div>
+
+        <!-- Password Field -->
+        <div class="form_group" [class.error]="isFieldInvalid('password')">
+            <img src="/icons/password.png" alt="Icon">
+            <input 
+                [type]="showPassword ? 'text' : 'password'" 
+                id="password" 
+                formControlName="password"
+                placeholder="Password"
+                autocomplete="new-password"
+                required>
+            <label for="password">Password</label>
+            <img 
+                (click)="togglePassword()" 
+                class="password_eye" 
+                [src]="showPassword ? '/icons/visibility_off.svg' : '/icons/visibility.svg'"
+                alt="Toggle password visibility">
+            @if (isFieldInvalid('password')) {
+                <p class="error_label">Password must be at least 8 characters long.</p>
+            }
+        </div>
+
+        <!-- Confirm Password Field -->
+        <div class="form_group" [class.error]="isFieldInvalid('confirmPassword') || registerForm.hasError('passwordMismatch')">
+            <img src="/icons/password.png" alt="Icon">
+            <input 
+                [type]="showConfirmPassword ? 'text' : 'password'" 
+                id="confirmPassword" 
+                formControlName="confirmPassword"
+                placeholder="Confirm password"
+                autocomplete="new-password"
+                required>
+            <label for="confirmPassword">Confirm password</label>
+            <img 
+                (click)="toggleConfirmPassword()" 
+                class="password_eye" 
+                [src]="showConfirmPassword ? '/icons/visibility_off.svg' : '/icons/visibility.svg'"
+                alt="Toggle password visibility">
+            @if (isFieldInvalid('confirmPassword') || registerForm.hasError('passwordMismatch')) {
+                <p class="error_label">Passwords do not match.</p>
+            }
+        </div>
+
+        <!-- Privacy Policy Checkbox -->
+        <div class="form_group_checkbox" [class.error]="isFieldInvalid('privacyPolicy')">
+            <label class="custom_checkbox" for="privacyPolicy">
+                <input 
+                    type="checkbox" 
+                    id="privacyPolicy" 
+                    formControlName="privacyPolicy"
+                    required>
+                <span class="checkbox_icon"></span>
+                <span>Please accept the <a routerLink="/privacy" class="link">Privacy Policy</a></span>
+            </label>
+            @if (isFieldInvalid('privacyPolicy')) {
+                <p class="error_label">You must accept the privacy policy to continue.</p>
+            }
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form_actions">
+            <button 
+                type="submit" 
+                class="std_btn btn_prime"
+                [disabled]="registerForm.invalid || isSubmitting">
+                {{ isSubmitting ? 'Creating account...' : 'Get started' }}
+            </button>
+        </div>
     </form>
 </main>
 
