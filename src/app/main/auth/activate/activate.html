@@ -1,9 +1,48 @@
-<app-header actionLink="/auth/login" actionText="Log in"></app-header>
+<app-header [actionLink]="'/auth/login'" [actionText]="'Sign in'"></app-header>
 
 <main class="content flex-center">
     <div class="std_form">
-        <h1>Activating Account...</h1>
-        <p>Please wait while we activate your account.</p>
+        <!-- Loading State -->
+        @if (isActivating) {
+            <div class="activation_loading">
+                <h1>Activating Account...</h1>
+                <div class="spinner"></div>
+                <p>Please wait while we activate your account.</p>
+            </div>
+        }
+
+        <!-- Success State -->
+        @if (activationSuccess) {
+            <div class="activation_success">
+                <img src="/icons/check_circle.svg" alt="Success" class="success_icon">
+                <h1>Account Activated!</h1>
+                <p>Your account has been successfully activated. You can now sign in to Videoflix.</p>
+                
+                <div class="form_actions">
+                    <a routerLink="/auth/login" class="std_btn btn_prime">
+                        Sign in now
+                    </a>
+                </div>
+            </div>
+        }
+
+        <!-- Error State -->
+        @if (activationError) {
+            <div class="activation_error">
+                <img src="/icons/error.svg" alt="Error" class="error_icon">
+                <h1>Activation Failed</h1>
+                <p>{{ errorMessage }}</p>
+                
+                <div class="form_actions">
+                    <a routerLink="/auth/register" class="std_btn btn_secondary">
+                        Sign up again
+                    </a>
+                    <a routerLink="/auth/login" class="link">
+                        Try to sign in
+                    </a>
+                </div>
+            </div>
+        }
     </div>
 </main>
 

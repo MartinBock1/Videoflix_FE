@@ -156,12 +156,17 @@ export class AuthService {
   }
 
   /**
-   * Reset password with token
+   * Reset password with uid and token
    */
-  resetPassword(token: string, password: string): Observable<ApiResponse> {
-    const data: ResetPasswordData = { token, password };
+  resetPassword(uid: string, token: string, newPassword: string, confirmPassword: string): Observable<ApiResponse> {
+    // Use POST request with uid and token in URL path, like DA_Frontend
+    const endpoint = `password_confirm/${encodeURIComponent(uid)}/${encodeURIComponent(token)}/`;
+    const data = {
+      new_password: newPassword,
+      confirm_password: confirmPassword
+    };
     
-    return this.http.post<any>(this.getFullUrl(this.CONFIRM_PASSWORD_URL), data)
+    return this.http.post<any>(this.getFullUrl(endpoint), data)
       .pipe(
         map(response => this.handleSuccessResponse(response)),
         catchError(error => this.handleErrorResponse(error))

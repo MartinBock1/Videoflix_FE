@@ -17,7 +17,10 @@ export const routes: Routes = [
   { path: 'auth/activate', component: Activate },
   { path: 'auth/activate.html', component: Activate },  // Kompatibilität mit Backend Links
   { path: 'auth/forgot-password', component: ForgotPassword },
-  { path: 'auth/confirm-password/:token', component: ConfirmPassword },
+  { path: 'auth/forgot_password.html', component: ForgotPassword },  // Backend verwendet Unterstrich!
+  { path: 'auth/confirm-password', component: ConfirmPassword },
+  { path: 'auth/confirm-password.html', component: ConfirmPassword },  // Kompatibilität mit Backend Links
+  { path: 'auth/confirm_password.html', component: ConfirmPassword },  // Backend verwendet Unterstrich!
 
   // Statische Seiten (Öffentlich)
   // TODO: Privacy und Imprint Komponenten erstellen
