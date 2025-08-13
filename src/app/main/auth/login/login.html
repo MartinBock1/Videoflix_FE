@@ -1,9 +1,71 @@
-<app-header actionLink="/auth/register" actionText="Sign up"></app-header>
+<app-header [actionLink]="'/auth/register'" [actionText]="'Sign up'"></app-header>
 
 <main class="content flex-center">
-    <form class="std_form">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="std_form_small" novalidate>
         <h1>Log in</h1>
-        <p>Login works! TODO: Implement login form</p>
+        
+        <!-- Email Field -->
+        <div class="form_group" [class.error]="isFieldInvalid('email')">
+            <img src="/icons/mail.png" alt="Icon">
+            <input 
+                type="email" 
+                id="email" 
+                formControlName="email"
+                placeholder="Email"
+                autocomplete="username"
+                required>
+            <label for="email">Email</label>
+            @if (isFieldInvalid('email')) {
+                <p class="error_label">Please enter a valid email address.</p>
+            }
+        </div>
+
+        <!-- Password Field -->
+        <div class="form_group" [class.error]="isFieldInvalid('password')">
+            <img src="/icons/password.png" alt="Icon">
+            <input 
+                [type]="showPassword ? 'text' : 'password'" 
+                id="password" 
+                formControlName="password"
+                placeholder="Password"
+                autocomplete="current-password"
+                required>
+            <label for="password">Password</label>
+            <img 
+                (click)="togglePassword()" 
+                class="password_eye" 
+                [src]="showPassword ? '/icons/visibility_off.svg' : '/icons/visibility.svg'"
+                alt="Toggle password visibility">
+            @if (isFieldInvalid('password')) {
+                <p class="error_label">Password is required.</p>
+            }
+        </div>
+
+        <!-- Login Error -->
+        @if (loginError) {
+            <p class="login_error">{{ loginError }}</p>
+        }
+
+        <!-- Submit Button and Forgot Password -->
+        <div class="form_actions">
+            <button 
+                type="submit" 
+                class="std_btn btn_prime"
+                [disabled]="loginForm.invalid || isSubmitting">
+                {{ isSubmitting ? 'Logging in...' : 'Log in' }}
+            </button>
+            
+            <a routerLink="/auth/forgot-password" class="link link_prime">
+                Forgot password?
+            </a>
+        </div>
+
+        <!-- Sign Up Link -->
+        <div class="form_footer">
+            <p>New to Videoflix? 
+                <a routerLink="/auth/register" class="link">Sign up now</a>
+            </p>
+        </div>
     </form>
 </main>
 
