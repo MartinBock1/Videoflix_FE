@@ -6,9 +6,11 @@
 // 1. Base - Fundamental styles
 @import 'base/fonts';
 @import 'base/typography';
+@import 'base/variables';
 
 // 2. Utils - Mixins, functions, and utilities
 @import 'utils/mixins';
 
 // 3. Components - Component-specific styles
 @import 'components/header_footer';
+@import 'components/error';

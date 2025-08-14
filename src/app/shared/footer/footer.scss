@@ -11,6 +11,10 @@
 
 nav {
     @include flex-center(center, center, row, 32px);
+
+    a {
+        color: $link-color;
+    }
 }
 
 @media only screen and (max-width: 769px) {
@@ -18,3 +22,4 @@ nav {
         gap: 16px;
     }
 }
+

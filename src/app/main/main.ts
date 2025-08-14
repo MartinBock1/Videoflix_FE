@@ -18,6 +18,7 @@ import { Footer } from '../shared/footer/footer';
 })
 export class Main {
   emailForm: FormGroup;
+  signUpAttempted = false; // Tracker für Sign Up Versuche
 
   constructor(
     private fb: FormBuilder,
@@ -39,27 +40,42 @@ export class Main {
   }
 
   /**
-   * Checks if the email field is invalid and has been touched
+   * Checks if the email field is invalid and should show error
    */
   isEmailInvalid(): boolean {
     const emailField = this.emailForm.get('email');
-    return !!(emailField && emailField.invalid && emailField.touched);
+    // Show error ONLY when sign up was explicitly attempted, ignore touched state
+    return !!(emailField && emailField.invalid && this.signUpAttempted);
+  }
+
+  /**
+   * Dismisses the error message by resetting states
+   */
+  dismissError(): void {
+    this.signUpAttempted = false; // Only reset our custom flag
   }
 
   /**
    * Handles the sign up form submission
    */
   onSignUp(): void {
-    if (this.emailForm.invalid) {
-      this.emailForm.get('email')?.markAsTouched();
+    this.signUpAttempted = true; // Mark that sign up was attempted
+    
+    const emailField = this.emailForm.get('email');
+    const emailValue = emailField?.value?.trim();
+    
+    // Trigger error for empty email or invalid email
+    if (!emailValue || this.emailForm.invalid) {
+      // Don't mark as touched, just rely on signUpAttempted flag
       return;
     }
 
-    const email = this.emailForm.get('email')?.value;
+    // Reset the flag on successful submission
+    this.signUpAttempted = false;
     
     // Navigate to register page with email as query parameter
     this.router.navigate(['/auth/register'], {
-      queryParams: { email: email }
+      queryParams: { email: emailValue }
     });
   }
 }

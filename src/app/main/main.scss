@@ -4,11 +4,130 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    background-image:
+        $main-gradient,
+        url('/img/index_bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
 }
 
 .content {
     flex: 1;
-    @include flex-center-center;
+    @include flex-center();
     border: 1px solid;
     padding: 48px;
+}
+
+.sign_up {
+    width: 100%;
+    @include flex-center($dir: column, $gap: 24px);
+
+    h1 {
+        width: 100%;
+        text-align: center;
+        color: $font-prime-color;
+        font-size: 48px;
+        font-weight: 700;
+    }
+
+    p {
+        width: 100%;
+        text-align: center;
+        color: $font-prime-color;
+        font-size: 18px;
+        font-weight: 400;
+    }
+
+    .form {
+        width: 100%;
+    }
+
+    .input_section {
+        width: 100%;
+        height: 48px;
+        @include flex-center();
+    }
+
+    input {
+        border: 2px solid white;
+        color: white;
+        background-color: rgba(0, 0, 0, 0.4);
+        padding: 12px 14px;
+        border-radius: 40px;
+        outline: none;
+        width: 350px;
+        height: 48px;
+
+        &::placeholder {
+            color: white;
+        }
+    }
+
+    .sign_up_button {
+        width: 142px;
+        height: 48px;
+        padding: 12px 24px;
+        gap: 4px;
+        border-radius: 40px;
+        background-color: $btn-prime-color;
+        font-size: 18px;
+        font-weight: 700;
+        color: $btn-prime-font-color;
+        margin-left: 16px;
+
+        &:hover {
+            background-color: $btn-prime-hover-color;
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .content {
+        padding: 32px;
+    }
+
+    .sign_up {
+        h1 {
+            font-size: 40px;
+        }
+
+        p {
+            font-size: 16px;
+        }
+
+        // Input schrumpft bis 500px, bleibt aber horizontal
+        input {
+            width: 100%;
+            max-width: 350px;
+            min-width: 250px;
+        }
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .sign_up {
+        .input_section {
+            flex-direction: column !important;
+            gap: 20px;
+        }
+
+        .input_section {
+            width: 100%;
+            height: 48px;
+            @include flex-center($jc: flex-start);
+        }
+
+        // Ab 500px: Input wird breiter
+        input {
+            width: 100%;
+            max-width: 430px;
+            min-width: 300px;
+        }
+
+        .sign_up_button {
+            margin-left: 0;
+        }
+    }
 }

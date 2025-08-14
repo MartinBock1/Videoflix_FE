@@ -2,31 +2,36 @@
 <app-header></app-header>
 
 <main class="content flex-center">
-    <section class="">
+    <section class="sign_up">
         <h1>Movies, TV shows, and more</h1>
         <p>Enter your email to create or restart your subscription.</p>
-        <form [formGroup]="emailForm" (ngSubmit)="onSignUp()" class="">
-            <div class="form_group_w_icon_wo_label w_full d_flex_cc_gm" [class.error]="isEmailInvalid()">
+        <form [formGroup]="emailForm" (ngSubmit)="onSignUp()" class="form" novalidate>
+            <div class="input_section" [class.error]="isEmailInvalid()">
                 <label for="email"></label>
                 <input 
                     type="email" 
                     placeholder="Email Address" 
                     formControlName="email"
                     id="email" 
-                    class="input_index" 
+                    class="input_field" 
                     required
                     autocomplete="email">
                 <div class="">
-                    <button type="submit" class="" [disabled]="emailForm.invalid">
+                    <button type="submit" class="sign_up_button">
                         Sign Up
                         <img src="/icons/chevron_right.svg" alt="" srcset="">
                     </button>
                 </div>
-                @if (isEmailInvalid()) {
-                    <p class="error_label">Please enter a valid email address.</p>
-                }
             </div>
         </form>
+        @if (isEmailInvalid()) {
+            <div class="error_label">
+                <div class="error-icon"></div>
+                <div class="error-text">Please enter a valid email address.</div>
+                <div class="error-divider"></div>
+                <div class="error-close" (click)="dismissError()"></div>
+            </div>
+        }
     </section>
 </main>
 

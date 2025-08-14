@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
-// Import all SCSS modules through main.scss
-@import 'scss/main';
+// Import all SCSS modules through index.scss
+@import 'scss/index';
 
 * {
     box-sizing: border-box;
@@ -9,7 +9,8 @@
     padding: 0;
 }
 
-html, body {
+html,
+body {
     height: 100%;
     margin: 0;
     padding: 0;
@@ -23,4 +24,14 @@ app-root {
 
 .width_full {
     width: 100%;
+}
+
+a,
+button {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+input {
+    cursor: text;
 }
