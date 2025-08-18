@@ -1,36 +1,58 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core'; // OnInit importieren
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { Header } from '../../../shared/header/header';
 import { Footer } from '../../../shared/footer/footer';
 import { AuthService } from '../../../shared/services/auth.service';
-import { lastValueFrom } from 'rxjs'; // Import lastValueFrom
+import { lastValueFrom, Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterModule,
-    Header,
-    Footer
-  ],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, Header, Footer],
   templateUrl: './login.html',
-  styleUrl: './login.scss'
+  styleUrl: './login.scss',
 })
-export class Login {
+export class Login implements OnInit, OnDestroy {
+  // OnInit implementieren
   loginForm: FormGroup;
   showPassword = false;
   isSubmitting = false;
   loginError = '';
+  successMessage = '';
+
+  private queryParamsSubscription?: Subscription;
+  private successTimer?: number;
+  private formChangesSubscription?: Subscription;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private route: ActivatedRoute
   ) {
     this.loginForm = this.createLoginForm();
+  }
+  
+  /**
+   * Lifecycle hook that is called after data-bound properties are initialized.
+   * Used to check for success messages and set up form value changes.
+   */
+  ngOnInit(): void {
+    this.checkForSuccessMessage();
+
+    // Clear login error when user starts typing
+     this.formChangesSubscription = this.loginForm.valueChanges.subscribe(() => {
+      if (this.loginError) {
+        this.loginError = '';
+      }
+    });
   }
 
   /**
@@ -38,13 +60,8 @@ export class Login {
    */
   private createLoginForm(): FormGroup {
     return this.fb.group({
-      email: ['', [
-        Validators.required,
-        Validators.email
-      ]],
-      password: ['', [
-        Validators.required
-      ]]
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
     });
   }
 
@@ -77,11 +94,7 @@ export class Login {
 
     try {
       const { email, password } = this.loginForm.value;
-      
-      // Use lastValueFrom to convert the Observable to a Promise
       await lastValueFrom(this.authService.login(email, password));
-      
-      // Navigate to main page after successful login
       this.router.navigate(['/']);
     } catch (error: any) {
       this.loginError = error.message || 'Login failed. Please try again.';
@@ -94,8 +107,58 @@ export class Login {
    * Marks all form fields as touched to trigger validation display
    */
   private markAllFieldsAsTouched(): void {
-    Object.keys(this.loginForm.controls).forEach(key => {
+    Object.keys(this.loginForm.controls).forEach((key) => {
       this.loginForm.get(key)?.markAsTouched();
     });
   }
+
+  /**
+   * Checks for a success message from query parameters and displays it.
+   * The message automatically fades out and is removed.
+   */
+  private checkForSuccessMessage(): void {
+    this.route.queryParams.pipe(take(1)).subscribe((params) => {
+      if (params['message']) {
+        this.successMessage = params['message'];
+
+        // URL sofort bereinigen
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: { message: null },
+          queryParamsHandling: 'merge',
+          replaceUrl: true,
+        });
+
+        // EINZIGER Timer: Entfernt die Nachricht aus dem DOM, nachdem die
+        // 5-sekündige CSS-Animation beendet ist.
+        this.successTimer = window.setTimeout(() => {
+          this.successMessage = '';
+        }, 5000); // Muss exakt mit der Dauer der CSS-Animation übereinstimmen
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Bereinigt den Timer, falls der Nutzer die Seite vorher verlässt
+    if (this.successTimer) {
+      clearTimeout(this.successTimer);
+    }
+
+    if (this.formChangesSubscription) {
+      this.formChangesSubscription.unsubscribe();
+    }
+  }
+
+  /**
+   * Dismiss success message manually
+   */
+  // dismissSuccessMessage(): void {
+  //   this.successMessage = '';
+  //   this.isFadingOut = false;
+
+  //   if (this.successTimer) {
+  //     clearTimeout(this.successTimer);
+  //     this.successTimer = undefined;
+  //   }
+  // }
 }

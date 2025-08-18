@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { Header } from '../../../shared/header/header';
 import { Footer } from '../../../shared/footer/footer';
 import { AuthService } from '../../../shared/services/auth.service';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-forgot-password',
@@ -67,10 +68,18 @@ export class ForgotPassword {
     try {
       const { email } = this.forgotPasswordForm.value;
       
-      await this.authService.forgotPassword(email).toPromise();
+      await lastValueFrom(this.authService.forgotPassword(email));
       
       // Mark email as sent
       this.emailSent = true;
+
+      // Navigate to login page after successful email sending
+      this.router.navigate(['/auth/login'], {
+        queryParams: { 
+          message: 'Password reset email sent! Please check your inbox.' 
+        }
+      });
+      
     } catch (error: any) {
       this.errorMessage = error.message || 'Failed to send reset email. Please try again.';
     } finally {

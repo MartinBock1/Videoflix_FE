@@ -184,7 +184,7 @@
         background-color: rgba(255, 0, 4, 0.1);
         border-radius: 8px;
         border: 1px solid $form-input-error-border-color;
-    }
+    }    
 
     .form_actions {
         @include flex-center($dir: column, $gap: 16px);

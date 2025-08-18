@@ -12,6 +12,14 @@
   >
     <h1>Log in</h1>
 
+    <!-- Success Message von Forgot Password -->
+    @if (successMessage) {
+      <div class="success_message">
+        <div class="success-icon"></div>
+        <div class="success-text">{{ successMessage }}</div>
+      </div>
+    }
+
     <!-- Email Field -->
     <div class="form_group" [class.error]="isFieldInvalid('email')">
       <img src="/icons/mail.png" alt="Icon" />
