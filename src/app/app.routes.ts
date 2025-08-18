@@ -5,7 +5,9 @@ import { Register } from './main/auth/register/register';
 import { Activate } from './main/auth/activate/activate';
 import { ForgotPassword } from './main/auth/forgot-password/forgot-password';
 import { ConfirmPassword } from './main/auth/confirm-password/confirm-password';
-import { AuthGuard } from './shared/guards/auth.guard';
+import { Privacy } from './shared/privacy/privacy';
+import { Imprint } from './shared/imprint/imprint'; 
+import { AuthGuard } from './shared/guards/auth.guard'; 
 
 export const routes: Routes = [
   // Landing Page (Öffentlich zugänglich)
@@ -24,8 +26,8 @@ export const routes: Routes = [
 
   // Statische Seiten (Öffentlich)
   // TODO: Privacy und Imprint Komponenten erstellen
-  // { path: 'privacy', component: PrivacyComponent },
-  // { path: 'imprint', component: ImprintComponent },
+  { path: 'privacy', component: Privacy },
+  { path: 'imprint', component: Imprint },
 
   // Geschützte Routen würden hier mit AuthGuard kommen
   // { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
