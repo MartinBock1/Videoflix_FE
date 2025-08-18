@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { Header } from '../../../shared/header/header';
 import { Footer } from '../../../shared/footer/footer';
 import { AuthService } from '../../../shared/services/auth.service';
+import { lastValueFrom } from 'rxjs'; // Import lastValueFrom
 
 @Component({
   selector: 'app-login',
@@ -77,7 +78,8 @@ export class Login {
     try {
       const { email, password } = this.loginForm.value;
       
-      await this.authService.login(email, password).toPromise();
+      // Use lastValueFrom to convert the Observable to a Promise
+      await lastValueFrom(this.authService.login(email, password));
       
       // Navigate to main page after successful login
       this.router.navigate(['/']);
