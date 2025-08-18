@@ -6,8 +6,7 @@
     display: flex;
     flex-direction: column;
     background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.8) -27.44%, rgba(0, 0, 0, 0.44) 44.23%, rgba(0, 0, 0, 0.8) 100%),
-    url('/img/login_bg.jpg');
-
+        url('/img/login_bg.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -18,6 +17,10 @@
     flex: 1;
     @include flex-center-center;
     padding: 48px;
+}
+
+.sign_up_button {
+    margin-left: 0;
 }
 
 @media (max-width: 500px) {

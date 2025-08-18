@@ -1,3 +1,19 @@
+.sign_up_button {
+    height: 48px;
+    padding: 12px 24px;
+    gap: 4px;
+    border-radius: 40px;
+    background-color: $btn-prime-color;
+    font-size: 18px;
+    font-weight: 700;
+    color: $btn-prime-font-color;
+    margin-left: 16px;
+
+    &:hover {
+        background-color: $btn-prime-hover-color;
+    }
+}
+
 .actionLink-button {
     height: 48px;
     border-radius: 40px;
@@ -5,14 +21,14 @@
     background-color: $btn-prime-color;
     font-weight: 700;
     font-size: 18px;
-     color: $btn-prime-font-color;
-    cursor: pointer;    
+    color: $btn-prime-font-color;
+    cursor: pointer;
 
     .actionLink {
         color: $btn-prime-font-color;
     }
 
     &:hover {
-            background-color: $btn-prime-hover-color;
-        }
+        background-color: $btn-prime-hover-color;
+    }
 }

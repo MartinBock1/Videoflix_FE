@@ -5,11 +5,26 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.8) -27.44%, rgba(0, 0, 0, 0.44) 44.23%, rgba(0, 0, 0, 0.8) 100%),
+        url('/img/sign_up_bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
 }
 
 .content {
     flex: 1;
     @include flex-center-center;
-    border: 1px solid;
     padding: 48px;
+}
+
+.sign_up_button {
+    margin-left: 0;
+}
+
+@media (max-width: 500px) {
+    .content {
+        padding: 0;
+    }
 }

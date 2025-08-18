@@ -64,23 +64,6 @@
             color: white;
         }
     }
-
-    .sign_up_button {
-        width: 142px;
-        height: 48px;
-        padding: 12px 24px;
-        gap: 4px;
-        border-radius: 40px;
-        background-color: $btn-prime-color;
-        font-size: 18px;
-        font-weight: 700;
-        color: $btn-prime-font-color;
-        margin-left: 16px;
-
-        &:hover {
-            background-color: $btn-prime-hover-color;
-        }
-    }
 }
 
 @media screen and (max-width: 768px) {
@@ -97,7 +80,6 @@
             font-size: 16px;
         }
 
-        // Input schrumpft bis 500px, bleibt aber horizontal
         input {
             width: 100%;
             max-width: 350px;
@@ -106,7 +88,7 @@
     }
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 570px) {
     .sign_up {
         .input_section {
             flex-direction: column !important;
