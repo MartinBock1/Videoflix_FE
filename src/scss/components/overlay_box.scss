@@ -1,0 +1,171 @@
+// @include flex-center($dir: column);
+
+.overlay_box {
+    @include flex-center($dir: column, $gap: 32px);
+    max-width: 520px;
+    margin: auto;
+    padding: 43px 56px;
+    background-color: $form-bg-color;
+    border-radius: $form-rad;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+
+    h1 {
+        color: $font-prime-color;
+        font-size: 48px;
+    }
+
+    .form_group {
+        width: 408px;
+        position: relative;
+        border: $form-input-border;
+        border-radius: $form-input-rad;
+        background-color: $form-input-bg-color;
+        overflow: hidden;
+
+        img:not(.password_eye) {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            z-index: 2;
+        }
+
+        input {
+            width: 100%;
+            padding: $form-input-pad;
+            padding-left: 48px;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: $font-prime-color;
+            font-size: 18px;
+            z-index: 1;
+
+            &::placeholder {
+                color: transparent;
+            }
+        }
+
+        label {
+            position: absolute;
+            left: 48px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        input:focus+label,
+        input:not(:placeholder-shown)+label {
+            color: transparent;
+        }
+
+        // Focus State
+        &:focus-within {
+            border-color: $form-input-active-border-color;
+            box-shadow: 0 0 0 2px rgba(46, 62, 223, 0.1);
+        }
+
+        // Error State
+        &.error {
+            border-color: $form-input-error-border-color;
+        }
+
+        // Password Eye Icon
+        img.password_eye,
+        .password_eye {
+            position: absolute;
+            right: 16px !important;
+            left: auto !important;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            z-index: 10;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+
+        input[type="password"],
+        input[type="text"] {
+            padding-right: 48px;
+        }
+    }
+
+    .error_label {
+        color: $error-text-color;
+        font-size: 14px;
+        margin-top: 8px;
+        padding-left: 36px;
+    }
+
+    .login_error {
+        color: $form-input-error-border-color;
+        font-size: 14px;
+        text-align: center;
+        padding: 12px;
+        background-color: rgba(255, 0, 4, 0.1);
+        border-radius: 8px;
+        border: 1px solid $form-input-error-border-color;
+    }
+
+    .form_actions {
+        @include flex-center($dir: column, $gap: 16px);
+        width: 100%;
+        
+        .link {
+            color: $form-text-color;
+            text-decoration: none;
+        }
+    }
+
+    .form_footer {
+        text-align: center;
+        color: $form-text-color;
+
+        .link {
+            color: $font-prime-color;
+            text-decoration: none;            
+        }
+    }
+
+}
+
+@media (max-width: 768px) {
+    .overlay_box {
+        width: 90%;
+        padding: 32px;
+
+        h1 {
+            font-size: 40px;
+        }
+
+        .form_group {
+            width: 100%;
+        }
+
+        input {
+            width: 100%;
+        }
+
+        .form_actions {
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .form_footer {
+            font-size: 14px;
+        }
+    }
+}

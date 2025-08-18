@@ -1,11 +1,11 @@
 .actionLink-button {
-    width: 99px;
     height: 48px;
     border-radius: 40px;
     padding: 12px 24px;
     background-color: $btn-prime-color;
     font-weight: 700;
     font-size: 18px;
+     color: $btn-prime-font-color;
     cursor: pointer;    
 
     .actionLink {
