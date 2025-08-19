@@ -4,9 +4,13 @@
         <img src="/icons/logo_icon.svg" alt="" srcset="">
     </a>
     <div id="" class="head_content_right">
-        <div class="actionLink-button">
+        <div class="actionLink-button" [class.icon-mode]="actionIcon">
             <a [routerLink]="actionLink" class="actionLink">
-                {{ actionText }}
+                @if (actionIcon) {
+                    <img [src]="actionIcon" [alt]="actionText" class="action-icon">
+                } @else {
+                    {{ actionText }}
+                }
             </a>
         </div>
     </div>

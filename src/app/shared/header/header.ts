@@ -10,4 +10,5 @@ import { RouterModule } from '@angular/router';
 export class Header {
   @Input() actionLink: string = '/auth/login';
   @Input() actionText: string = 'Log in';
+  @Input() actionIcon: string = ''; // Neuer Input für Icon-Pfad
 }

@@ -16,7 +16,6 @@
 .content {
     flex: 1;
     @include flex-center();
-    border: 1px solid;
     padding: 48px;
 }
 

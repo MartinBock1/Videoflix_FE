@@ -24,10 +24,10 @@
     }
 }
 
-.main_header img:nth-child(1){
+.main_header img:nth-child(1):not(.action-icon){
     display: none;
 }
-.main_header img:nth-child(2){
+.main_header img:nth-child(2):not(.action-icon){
     display: block;
 }
 
@@ -36,10 +36,10 @@
         padding: 16px 32px;
     }
 
-    .main_header img:nth-child(1){
+    .main_header img:nth-child(1):not(.action-icon){
         display: block;
     }
-    .main_header img:nth-child(2){
+    .main_header img:nth-child(2):not(.action-icon){
         display: none;
     }
 }
@@ -48,4 +48,13 @@
     .main_header {
         gap: 16px;
     }
+}
+
+// Styling für Action Icon (Zurück-Pfeil)
+.action-icon {
+    width: 48px;
+    height: 48px;
+    display: block !important;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
 }

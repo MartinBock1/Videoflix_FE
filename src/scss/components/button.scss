@@ -26,9 +26,39 @@
 
     .actionLink {
         color: $btn-prime-font-color;
+        text-decoration: none;
     }
 
     &:hover {
         background-color: $btn-prime-hover-color;
+    }
+
+    // Icon Mode für Header (quadratisch, weniger Padding)
+    &.icon-mode {
+        padding: 12px;
+        width: 48px;
+        height: 48px;
+        background-color: transparent; // Kein Hintergrund für den Pfeil
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        .actionLink {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        // Hover-Effekt für Icon-Mode (ohne Background-Change)
+        &:hover .action-icon {
+            opacity: 0.8;
+        }
+
+        // Hover-Background für Icon-Mode entfernen
+        &:hover {
+            background-color: transparent;
+        }
     }
 }
