@@ -1,1 +1,29 @@
-<p>imprint works!</p>
+<app-header
+  [actionLink]="'/auth/login'"
+  [actionText]="'Zurück'"
+  [actionIcon]="'/icons/arrow_back.svg'"
+></app-header>
+
+<main class="content flex-center">
+    <h1>Imprint</h1>
+    <div class="container">
+        <br />
+        <p>
+          Martin Bock<br />
+          Becherweg 30<br />
+          13407 Berlin
+        </p>
+        <br />
+        <h2>Kontakt</h2>
+        <br />
+        <p>
+          Telefon: +49 (0) 30 81473698<br />
+          E-Mail:
+          <a class="link" href="mailto:kontakt@martin-bock.info"
+            >kontakt@martin-bock.info</a
+          >
+        </p>
+    </div>
+</main>
+
+<app-footer></app-footer>
