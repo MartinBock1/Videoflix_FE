@@ -8,6 +8,7 @@ import { ConfirmPassword } from './main/auth/confirm-password/confirm-password';
 import { Privacy } from './shared/privacy/privacy';
 import { Imprint } from './shared/imprint/imprint'; 
 import { AuthGuard } from './shared/guards/auth.guard'; 
+import { VideoListComponent } from './pages/video-list/video-list.component';
 
 export const routes: Routes = [
   // Landing Page (Öffentlich zugänglich)
@@ -17,21 +18,20 @@ export const routes: Routes = [
   { path: 'auth/login', component: Login },
   { path: 'auth/register', component: Register },
   { path: 'auth/activate', component: Activate },
-  { path: 'auth/activate.html', component: Activate },  // Kompatibilität mit Backend Links
+  { path: 'auth/activate.html', component: Activate },
   { path: 'auth/forgot-password', component: ForgotPassword },
   { path: 'auth/forgot_password.html', component: ForgotPassword },  // Backend verwendet Unterstrich!
   { path: 'auth/confirm-password', component: ConfirmPassword },
-  { path: 'auth/confirm-password.html', component: ConfirmPassword },  // Kompatibilität mit Backend Links
+  { path: 'auth/confirm-password.html', component: ConfirmPassword },
   { path: 'auth/confirm_password.html', component: ConfirmPassword },  // Backend verwendet Unterstrich!
 
   // Statische Seiten (Öffentlich)
-  // TODO: Privacy und Imprint Komponenten erstellen
   { path: 'privacy', component: Privacy },
   { path: 'imprint', component: Imprint },
 
   // Geschützte Routen würden hier mit AuthGuard kommen
   // { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
-  // { path: 'videos', component: VideoListComponent, canActivate: [AuthGuard] },
+  { path: 'videos', component: VideoListComponent, canActivate: [AuthGuard] },
   
   // Fallback - redirect to home
   { path: '**', redirectTo: '' }

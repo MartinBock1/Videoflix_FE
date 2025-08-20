@@ -11,7 +11,7 @@ import { Header } from '../../../shared/header/header';
 import { Footer } from '../../../shared/footer/footer';
 import { AuthService } from '../../../shared/services/auth.service';
 import { lastValueFrom, Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { take, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -94,8 +94,14 @@ export class Login implements OnInit, OnDestroy {
 
     try {
       const { email, password } = this.loginForm.value;
-      await lastValueFrom(this.authService.login(email, password));
-      this.router.navigate(['/']);
+      const result = await lastValueFrom(this.authService.login(email, password));
+      
+      if (result.success) {
+        // Navigation zu Videos
+        this.router.navigate(['/videos']);
+      } else {
+        this.loginError = result.message || 'Login failed. Please try again.';
+      }
     } catch (error: any) {
       this.loginError = error.message || 'Login failed. Please try again.';
     } finally {
@@ -148,17 +154,4 @@ export class Login implements OnInit, OnDestroy {
       this.formChangesSubscription.unsubscribe();
     }
   }
-
-  /**
-   * Dismiss success message manually
-   */
-  // dismissSuccessMessage(): void {
-  //   this.successMessage = '';
-  //   this.isFadingOut = false;
-
-  //   if (this.successTimer) {
-  //     clearTimeout(this.successTimer);
-  //     this.successTimer = undefined;
-  //   }
-  // }
 }

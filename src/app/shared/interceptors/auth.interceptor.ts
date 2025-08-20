@@ -1,12 +1,9 @@
 import { HttpInterceptorFn, HttpErrorResponse, HttpRequest, HttpEvent, HttpHandlerFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
-import { catchError, filter, take, switchMap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
-
-let isRefreshing = false;
-let refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
 /**
  * HTTP Interceptor function to automatically attach auth tokens and handle token refresh
@@ -29,24 +26,19 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
 };
 
 /**
- * Add authentication token to request headers
+ * Add authentication to request (Session-based wie JavaScript Frontend)
  */
 function addToken(request: HttpRequest<unknown>, authService: AuthService): HttpRequest<unknown> {
-  const token = authService.getToken();
+  // Session-based Authentication with credentials
+  let authRequest = request.clone({
+    withCredentials: true
+  });
   
-  if (token) {
-    return request.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-  }
-  
-  return request;
+  return authRequest;
 }
 
 /**
- * Handle 401 Unauthorized errors by attempting token refresh
+ * Handle 401 Unauthorized errors
  */
 function handle401Error(
   request: HttpRequest<unknown>, 
@@ -54,29 +46,9 @@ function handle401Error(
   authService: AuthService, 
   router: Router
 ): Observable<HttpEvent<unknown>> {
-  if (!isRefreshing) {
-    isRefreshing = true;
-    refreshTokenSubject.next(null);
-
-    return authService.refreshToken().pipe(
-      switchMap((response: any) => {
-        isRefreshing = false;
-        refreshTokenSubject.next(response.data?.access);
-        return next(addToken(request, authService));
-      }),
-      catchError(error => {
-        isRefreshing = false;
-        authService.logout();
-        router.navigate(['/auth/login']);
-        return throwError(() => error);
-      })
-    );
-  } else {
-    // Wait for token refresh to complete
-    return refreshTokenSubject.pipe(
-      filter(token => token != null),
-      take(1),
-      switchMap(() => next(addToken(request, authService)))
-    );
-  }
+  // For session-based auth: no token refresh, direct logout
+  authService.logout();
+  router.navigate(['/auth/login']);
+  
+  return throwError(() => new Error('Session expired. Please login again.'));
 }

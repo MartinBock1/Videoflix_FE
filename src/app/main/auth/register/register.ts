@@ -105,14 +105,12 @@ export class Register implements OnInit {
       // Real API call to backend
       this.authService.register(registerData).subscribe({
         next: (response) => {
-          console.log('Registration successful:', response);
           this.isSubmitting = false;
           this.router.navigate(['/auth/login'], {
             queryParams: { message: 'Registration successful! Please check your email for activation.' }
           });
         },
         error: (error) => {
-          console.error('Registration failed:', error);
           // TODO: Show error message to user
           this.isSubmitting = false;
         },

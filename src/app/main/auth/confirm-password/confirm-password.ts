@@ -41,12 +41,8 @@ export class ConfirmPassword implements OnInit {
   ngOnInit(): void {
     // Get reset parameters from URL query parameters (uid and token)
     this.route.queryParams.subscribe(params => {
-      console.log('Password reset query parameters:', params); // Debug log
-      
       this.uid = params['uid'] || '';
       this.token = params['token'] || '';
-      
-      console.log('UID:', this.uid, 'Token:', this.token); // Debug log
       
       if (!this.uid || !this.token) {
         this.errorMessage = 'Invalid reset link. Please request a new password reset.';

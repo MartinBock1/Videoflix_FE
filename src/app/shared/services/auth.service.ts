@@ -59,10 +59,11 @@ export interface User {
  * Authentication service handling all auth-related API calls
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  private readonly API_BASE_URL = 'http://127.0.0.1:8000/api/';
+  // private readonly API_BASE_URL = 'http://127.0.0.1:8000/api/';
+  private readonly API_BASE_URL = 'http://localhost:8000/api/';
   private readonly LOGIN_URL = 'login/';
   private readonly REGISTER_URL = 'register/';
   private readonly FORGET_PASSWORD_URL = 'password_reset/';
@@ -97,39 +98,102 @@ export class AuthService {
    * Register a new user
    */
   register(userData: RegisterData): Observable<ApiResponse> {
-    return this.http.post<any>(this.getFullUrl(this.REGISTER_URL), userData)
+    return this.http
+      .post<any>(this.getFullUrl(this.REGISTER_URL), userData)
       .pipe(
-        map(response => this.handleSuccessResponse(response)),
-        catchError(error => this.handleErrorResponse(error))
+        map((response) => this.handleSuccessResponse(response)),
+        catchError((error) => this.handleErrorResponse(error))
       );
   }
 
   /**
-   * Login user
+   * Login user - Session-based Authentication
    */
   login(email: string, password: string): Observable<ApiResponse> {
     const loginData: LoginData = { email, password };
-    
-    return this.http.post<any>(this.getFullUrl(this.LOGIN_URL), loginData)
+
+    return this.http
+      .post<any>(this.getFullUrl(this.LOGIN_URL), loginData, {
+        observe: 'response',
+        withCredentials: true,
+      })
       .pipe(
-        map(response => {
-          const result = this.handleSuccessResponse(response);
-          
-          // Store token if login successful
-          if (result.success && response.access) {
-            this.setToken(response.access);
-            this.setRefreshToken(response.refresh);
+        map((response) => {
+          const result = this.handleSuccessResponse(response.body);
+
+          if (result.success) {
+            // Set authentication status
             this.isAuthenticatedSubject.next(true);
-            
+
             // Set user data if available
-            if (response.user) {
-              this.currentUserSubject.next(response.user);
+            if (response.body?.user) {
+              this.currentUserSubject.next(response.body.user);
             }
           }
-          
+
           return result;
         }),
-        catchError(error => this.handleErrorResponse(error))
+        catchError((error) => this.handleErrorResponse(error))
+      );
+  }
+
+  /**
+   * Get CSRF token from Django backend
+   */
+  getCSRFToken(): Observable<any> {
+    return this.http.get(`${this.API_BASE_URL}csrf/`, {
+      withCredentials: true,
+    });
+  }
+
+  /**
+   * Direct test using native fetch
+   */
+  testDirectFetch(): Promise<any> {
+    return fetch(`${this.API_BASE_URL}video/`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    })
+      .then((response) => response.json())
+      .catch((error) => {
+        throw error;
+      });
+  }
+
+  /**
+   * Test HTTP-Only Cookie JWT authentication by making a simple authenticated request
+   */
+  testSession(): Observable<ApiResponse> {
+    return this.http
+      .get<any>(this.getFullUrl('user/'), {
+        withCredentials: true,
+      })
+      .pipe(
+        map((response) => {
+          return this.handleSuccessResponse(response);
+        }),
+        catchError((error) => {
+          return this.handleErrorResponse(error);
+        })
+      );
+  }
+
+  /**
+   * Validate current session
+   */
+  validateSession(): Observable<ApiResponse> {
+    return this.http
+      .get<any>(this.getFullUrl('/api/auth/validate/'), {
+        withCredentials: true,
+      })
+      .pipe(
+        map((response) => this.handleSuccessResponse(response)),
+        catchError((error) => {
+          return this.handleErrorResponse(error);
+        })
       );
   }
 
@@ -147,30 +211,37 @@ export class AuthService {
    */
   forgotPassword(email: string): Observable<ApiResponse> {
     const data: ForgotPasswordData = { email };
-    
-    return this.http.post<any>(this.getFullUrl(this.FORGET_PASSWORD_URL), data)
+
+    return this.http
+      .post<any>(this.getFullUrl(this.FORGET_PASSWORD_URL), data)
       .pipe(
-        map(response => this.handleSuccessResponse(response)),
-        catchError(error => this.handleErrorResponse(error))
+        map((response) => this.handleSuccessResponse(response)),
+        catchError((error) => this.handleErrorResponse(error))
       );
   }
 
   /**
    * Reset password with uid and token
    */
-  resetPassword(uid: string, token: string, newPassword: string, confirmPassword: string): Observable<ApiResponse> {
+  resetPassword(
+    uid: string,
+    token: string,
+    newPassword: string,
+    confirmPassword: string
+  ): Observable<ApiResponse> {
     // Use POST request with uid and token in URL path, like DA_Frontend
-    const endpoint = `password_confirm/${encodeURIComponent(uid)}/${encodeURIComponent(token)}/`;
+    const endpoint = `password_confirm/${encodeURIComponent(
+      uid
+    )}/${encodeURIComponent(token)}/`;
     const data = {
       new_password: newPassword,
-      confirm_password: confirmPassword
+      confirm_password: confirmPassword,
     };
-    
-    return this.http.post<any>(this.getFullUrl(endpoint), data)
-      .pipe(
-        map(response => this.handleSuccessResponse(response)),
-        catchError(error => this.handleErrorResponse(error))
-      );
+
+    return this.http.post<any>(this.getFullUrl(endpoint), data).pipe(
+      map((response) => this.handleSuccessResponse(response)),
+      catchError((error) => this.handleErrorResponse(error))
+    );
   }
 
   /**
@@ -178,20 +249,25 @@ export class AuthService {
    */
   activateAccount(uid: string, token: string): Observable<ApiResponse> {
     // Use GET request with uid and token in URL path, like DA_Frontend
-    const endpoint = `activate/${encodeURIComponent(uid)}/${encodeURIComponent(token)}/`;
-    
-    return this.http.get<any>(this.getFullUrl(endpoint))
-      .pipe(
-        map(response => this.handleSuccessResponse(response)),
-        catchError(error => this.handleErrorResponse(error))
-      );
+    const endpoint = `activate/${encodeURIComponent(uid)}/${encodeURIComponent(
+      token
+    )}/`;
+
+    return this.http.get<any>(this.getFullUrl(endpoint)).pipe(
+      map((response) => this.handleSuccessResponse(response)),
+      catchError((error) => this.handleErrorResponse(error))
+    );
   }
 
   /**
    * Get current authentication status
    */
   isAuthenticated(): boolean {
-    return this.isAuthenticatedSubject.value;
+    const hasAuthStatus = this.isAuthenticatedSubject.value;
+    const hasUser = this.currentUserSubject.value !== null;
+    const hasToken = this.getToken() !== null;
+
+    return hasToken || (hasAuthStatus && hasUser);
   }
 
   /**
@@ -239,27 +315,13 @@ export class AuthService {
 
   /**
    * Refresh authentication token
+   * Not needed for session-based auth
    */
   refreshToken(): Observable<ApiResponse> {
-    const refreshToken = this.getRefreshToken();
-    
-    if (!refreshToken) {
-      return throwError(() => new Error('No refresh token available'));
-    }
-
-    return this.http.post<any>(this.getFullUrl(this.REFRESH_URL), { refresh: refreshToken })
-      .pipe(
-        map(response => {
-          if (response.access) {
-            this.setToken(response.access);
-          }
-          return this.handleSuccessResponse(response);
-        }),
-        catchError(error => {
-          this.logout(); // Logout on refresh failure
-          return this.handleErrorResponse(error);
-        })
-      );
+    return throwError(
+      () =>
+        new Error('Session-based authentication does not support token refresh')
+    );
   }
 
   /**
@@ -268,7 +330,7 @@ export class AuthService {
   getAuthHeaders(): HttpHeaders {
     const token = this.getToken();
     return new HttpHeaders({
-      'Authorization': token ? `Bearer ${token}` : ''
+      Authorization: token ? `Bearer ${token}` : '',
     });
   }
 
@@ -286,7 +348,7 @@ export class AuthService {
     return {
       success: true,
       data: response,
-      message: response.message || 'Operation successful'
+      message: response.message || 'Operation successful',
     };
   }
 
@@ -300,7 +362,7 @@ export class AuthService {
     if (error.error) {
       // Extract error messages from Django REST framework error format
       if (typeof error.error === 'object') {
-        Object.keys(error.error).forEach(key => {
+        Object.keys(error.error).forEach((key) => {
           const fieldErrors = error.error[key];
           if (Array.isArray(fieldErrors)) {
             errorMessages.push(...fieldErrors);
@@ -311,14 +373,15 @@ export class AuthService {
       } else if (typeof error.error === 'string') {
         errorMessages.push(error.error);
       }
-      
-      errorMessage = errorMessages.length > 0 ? errorMessages.join('. ') : errorMessage;
+
+      errorMessage =
+        errorMessages.length > 0 ? errorMessages.join('. ') : errorMessage;
     }
 
     const apiError: ApiResponse = {
       success: false,
       errors: errorMessages,
-      message: errorMessage
+      message: errorMessage,
     };
 
     return throwError(() => apiError);

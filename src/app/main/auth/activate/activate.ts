@@ -34,12 +34,8 @@ export class Activate implements OnInit {
   ngOnInit(): void {
     // Get activation parameters from URL query parameters (uid and token)
     this.route.queryParams.subscribe(params => {
-      console.log('Query parameters:', params); // Debug log
-      
       this.uid = params['uid'] || '';
       this.token = params['token'] || '';
-      
-      console.log('UID:', this.uid, 'Token:', this.token); // Debug log
       
       if (!this.uid || !this.token) {
         this.handleActivationError('Invalid activation link. Please check your email for the correct link.');

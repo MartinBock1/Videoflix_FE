@@ -1,0 +1,66 @@
+<main *ngIf="previewVideo" class="w_full d_flex_ss_gl font_white_color">
+  <!-- Preview Section -->
+  <section class="preview_section">
+    <div class="preview_section_video">
+      <video autoplay muted loop #videoPlayer></video>
+      <div class="preview_section_video_overlay"></div>
+    </div>
+    <article>
+      <h1>{{ previewVideo.title }}</h1>
+      <p>{{ previewVideo.description }}</p>
+      <button class="std_btn btn_prime pad_s d_flex_cc_gs" (click)="playVideo(previewVideo.id)">
+        <img src="/icons/play_arrow.svg" alt="Play Icon">
+        Play
+      </button>
+    </article>
+  </section>
+
+  <!-- Video List Section -->
+  <section class="list_section">
+    <!-- Newest Videos -->
+    <section class="video_list" *ngIf="latestVideos.length > 0">
+      <h2>New on Videoflix</h2>
+      <div class="scroll-wrapper">
+        <ul>
+          <li *ngFor="let video of latestVideos">
+            <img [src]="video.thumbnail" [alt]="video.title" (click)="showVideo(video)">
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Videos by Category -->
+    <section class="video_list dynamic-category" *ngFor="let category of categories">
+        <h2>{{ category | titlecase }}</h2>
+        <div class="scroll-wrapper">
+            <ul>
+                <li *ngFor="let video of videosByCategory.get(category)">
+                    <img [src]="video.thumbnail" [alt]="video.title" (click)="showVideo(video)">
+                </li>
+            </ul>
+        </div>
+    </section>
+  </section>
+</main>
+
+<!-- Video Overlay -->
+<div class="video-overlay" *ngIf="isOverlayVisible">
+  <div class="overlay-content">
+    <div class="overlay-header">
+      <img src="/icons/arrow_back.svg" (click)="closeVideoOverlay()" alt="Back">
+      <h1 #overlayTitle>{{ selectedVideo?.title }}</h1>
+      <img src="/icons/logo_icon_small.svg" alt="Logo">
+    </div>
+    <div class="video-wrapper">
+      <video #overlayVideo controls></video>
+    </div>
+    <div class="overlay-controls">
+      <label for="setResolution">Resolution:</label>
+      <select id="setResolution" [(ngModel)]="currentResolution" (change)="onResolutionChange()">
+        <option value="480p">480p</option>
+        <option value="720p">720p</option>
+        <option value="1080p">1080p</option>
+      </select>
+    </div>
+  </div>
+</div>
