@@ -22,16 +22,22 @@ import { Video } from '../../../../shared/interfaces/api.interfaces';
       </div>
       <div class="video-info">
         <h3 class="video-title">{{ video.title }}</h3>
-        <p class="video-description" *ngIf="video.description">
-          {{ truncateText(video.description, 100) }}
-        </p>
+        @if(video.description) {
+          <p class="video-description">
+            {{ truncateText(video.description, 100) }}
+          </p>
+        }
         <div class="video-meta">
-          <span class="video-category" *ngIf="video.category">
-            {{ video.category }}
-          </span>
-          <span class="video-created" *ngIf="video.created_at">
-            {{ formatDate(video.created_at) }}
-          </span>
+          @if(video.category) {
+            <span class="video-category">
+              {{ video.category }}
+            </span>
+          }
+          @if(video.created_at) {
+            <span class="video-created">
+              {{ formatDate(video.created_at) }}
+            </span>
+          }
         </div>
       </div>
     </div>

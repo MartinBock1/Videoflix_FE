@@ -24,23 +24,31 @@ declare var Hls: any;
         </video>
         
         <!-- Custom Controls Overlay -->
-        <div class="video-overlay" *ngIf="!showControls" (click)="onVideoClick()">
-          <div class="play-button" *ngIf="!isPlaying">
-            <img src="/icons/play_arrow.svg" alt="Play" />
-          </div>
-          
-          <!-- Video Info -->
-          <div class="video-info-overlay" *ngIf="isMainPlayer">
-            <h1>{{ video?.title }}</h1>
-            <p *ngIf="video?.description">{{ video?.description }}</p>
-            <div class="video-actions">
-              <button class="play-btn" (click)="togglePlay($event)">
-                <img [src]="isPlaying ? '/icons/pause.svg' : '/icons/play_arrow.svg'" alt="Play/Pause" />
-                {{ isPlaying ? 'Pause' : 'Play' }}
-              </button>
-            </div>
-          </div>
-        </div>
+         @if(!showControls) {
+           <div class="video-overlay" (click)="onVideoClick()">
+            @if(!isPlaying) {
+              <div class="play-button">
+                <img src="/icons/play_arrow.svg" alt="Play" />
+              </div>
+            }
+             
+             <!-- Video Info -->
+              @if(isMainPlayer) {
+                <div class="video-info-overlay">
+                  <h1>{{ video?.title }}</h1>
+                  @if(video?.description) {
+                    <p>{{ video?.description }}</p>
+                  }
+                  <div class="video-actions">
+                    <button class="play-btn" (click)="togglePlay($event)">
+                      <img [src]="isPlaying ? '/icons/pause.svg' : '/icons/play_arrow.svg'" alt="Play/Pause" />
+                      {{ isPlaying ? 'Pause' : 'Play' }}
+                    </button>
+                  </div>
+                </div>
+              }
+           </div>
+         }
 
         <!-- Loading State -->
         <div class="loading-overlay" *ngIf="isLoading">
