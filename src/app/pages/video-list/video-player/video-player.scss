@@ -1,0 +1,192 @@
+.video-player {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #000;
+}
+
+.main-player {
+    height: 70vh;
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(transparent 0%, rgba(0, 0, 0, 0.3) 70%, rgba(0, 0, 0, 0.8) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 50%;
+    padding: 2rem;
+    transition: all 0.2s;
+}
+
+.play-button:hover {
+    background: rgba(0, 0, 0, 0.9);
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.play-button img {
+    width: 3rem;
+    height: 3rem;
+    filter: invert(1);
+}
+
+.video-info-overlay {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    right: 2rem;
+    color: #fff;
+    z-index: 10;
+}
+
+.video-info-overlay h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 0 0 1rem 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.video-info-overlay p {
+    font-size: 1.1rem;
+    margin: 0 0 1.5rem 0;
+    max-width: 50%;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    line-height: 1.4;
+}
+
+.video-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.play-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #e50914;
+    color: #fff;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.play-btn:hover {
+    background: #f40612;
+}
+
+.play-btn img {
+    width: 1.5rem;
+    height: 1.5rem;
+    filter: invert(1);
+}
+
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #333;
+    border-top: 3px solid #e50914;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.error-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+}
+
+.error-content {
+    text-align: center;
+    color: #fff;
+}
+
+.error-content img {
+    height: 4rem;
+    opacity: 0.7;
+    margin-bottom: 1rem;
+}
+
+.error-content button {
+    background: #e50914;
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.resolution-selector {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 15;
+}
+
+.resolution-selector select {
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 0.5rem;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

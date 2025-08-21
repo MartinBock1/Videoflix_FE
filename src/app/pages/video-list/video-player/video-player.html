@@ -1,0 +1,70 @@
+<div class="video-player" [class.main-player]="isMainPlayer">
+  <div class="video-container">
+    <video 
+      #videoElement
+      [poster]="video?.thumbnail"
+      [controls]="showControls"
+      (click)="onVideoClick()"
+      (loadstart)="onLoadStart()"
+      (loadeddata)="onLoadedData()"
+      (error)="onVideoError($event)">
+      Your browser does not support the video tag.
+    </video>
+    
+    <!-- Custom Controls Overlay -->
+     @if(!showControls) {
+       <div class="video-overlay" (click)="onVideoClick()">
+        @if(!isPlaying) {
+          <div class="play-button">
+            <img src="/assets/icons/play_arrow.svg" alt="Play" />
+          </div>
+        }
+         
+         <!-- Video Info -->
+          @if(isMainPlayer) {
+            <div class="video-info-overlay">
+              <h1>{{ video?.title }}</h1>
+              @if(video?.description) {
+                <p>{{ video?.description }}</p>
+              }
+              <div class="video-actions">
+                <button class="play-btn" (click)="togglePlay($event)">
+                  <img [src]="isPlaying ? '/assets/icons/pause.svg' : '/assets/icons/play_arrow.svg'" alt="Play/Pause" />
+                  {{ isPlaying ? 'Pause' : 'Play' }}
+                </button>
+              </div>
+            </div>
+          }
+       </div>
+     }
+
+    <!-- Loading State -->
+     @if(isLoading) {
+         <div class="loading-overlay">
+           <div class="spinner"></div>
+         </div>
+     }
+
+    <!-- Error State -->
+     @if(hasError) {
+         <div class="error-overlay">
+           <div class="error-content">
+             <img src="/assets/img/warning.png" alt="Error" />
+             <p>Video konnte nicht geladen werden</p>
+             <button (click)="retryLoad()">Erneut versuchen</button>
+           </div>
+         </div>
+     }
+
+    <!-- Resolution Selector -->
+     @if(showResolutionSelector) {
+         <div class="resolution-selector">
+           <select (change)="onResolutionChange($event)" [value]="currentResolution">
+             <option value="480p">480p</option>
+             <option value="720p">720p</option>
+             <option value="1080p">1080p</option>
+           </select>
+         </div>
+     }
+  </div>
+</div>

@@ -1,0 +1,67 @@
+<div class="video-list-container">
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <img src="/assets/icons/logo_icon.svg" alt="Videoflix" />
+      <span>Videoflix</span>
+    </div>
+    <div class="header-actions">
+      <span>{{ currentUser?.first_name || currentUser?.email }}</span>
+      <button (click)="logout()" class="logout-btn">
+        <img src="/assets/icons/logout.svg" alt="Logout" />
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Video Player -->
+  <section class="main-video" *ngIf="currentVideo$ | async as currentVideo">
+    <app-video-player 
+      [video]="currentVideo"
+      [isMainPlayer]="true"
+      (playVideo)="onPlayVideo($event)">
+    </app-video-player>
+  </section>
+
+  <!-- Video Categories -->
+  <main class="video-categories">
+    <!-- Latest Videos Section -->
+    <section class="category-section" *ngIf="(latestVideos$ | async)?.length">
+      <h2>Neueste Videos</h2>
+      <div class="video-grid">
+        <app-video-card 
+          *ngFor="let video of latestVideos$ | async" 
+          [video]="video"
+          (playVideo)="onPlayVideo($event)">
+        </app-video-card>
+      </div>
+    </section>
+
+    <!-- Category Sections -->
+    <section 
+      class="category-section" 
+      *ngFor="let category of categories"
+      [attr.data-category]="category">
+      <h2>{{ getCategoryDisplayName(category) }}</h2>
+      <div class="video-grid">
+        <app-video-card 
+          *ngFor="let video of getVideosByCategory(category)" 
+          [video]="video"
+          (playVideo)="onPlayVideo($event)">
+        </app-video-card>
+      </div>
+    </section>
+  </main>
+
+  <!-- Loading State -->
+  <div class="loading" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Videos werden geladen...</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="error" *ngIf="errorMessage">
+    <img src="/assets/img/warning.png" alt="Error" />
+    <p>{{ errorMessage }}</p>
+    <button (click)="loadVideos()" class="retry-btn">Erneut versuchen</button>
+  </div>
+</div>

@@ -8,7 +8,7 @@ import { ConfirmPassword } from './main/auth/confirm-password/confirm-password';
 import { Privacy } from './shared/privacy/privacy';
 import { Imprint } from './shared/imprint/imprint'; 
 import { AuthGuard } from './shared/guards/auth.guard'; 
-import { VideoListComponent } from './pages/video-list/video-list.component';
+import { VideoList } from './pages/video-list/video-list';
 
 export const routes: Routes = [
   // Landing Page (Öffentlich zugänglich)
@@ -31,7 +31,7 @@ export const routes: Routes = [
 
   // Geschützte Routen würden hier mit AuthGuard kommen
   // { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
-  { path: 'videos', component: VideoListComponent, canActivate: [AuthGuard] },
+  { path: 'videos', component: VideoList, canActivate: [AuthGuard] },
   
   // Fallback - redirect to home
   { path: '**', redirectTo: '' }

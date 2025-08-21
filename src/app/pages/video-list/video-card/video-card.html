@@ -1,0 +1,34 @@
+<div class="video-card" (click)="onPlayVideo()">
+  <div class="video-thumbnail">
+    <img 
+      [src]="video.thumbnail || '/assets/img/index_bg.jpg'" 
+      [alt]="video.title"
+      (error)="onImageError($event)" />
+    <div class="play-overlay">
+      <img src="/assets/icons/play_arrow.svg" alt="Play" />
+    </div>
+    <div class="video-duration">
+      Video
+    </div>
+  </div>
+  <div class="video-info">
+    <h3 class="video-title">{{ video.title }}</h3>
+    @if(video.description) {
+      <p class="video-description">
+        {{ truncateText(video.description, 100) }}
+      </p>
+    }
+    <div class="video-meta">
+      @if(video.category) {
+        <span class="video-category">
+          {{ video.category }}
+        </span>
+      }
+      @if(video.created_at) {
+        <span class="video-created">
+          {{ formatDate(video.created_at) }}
+        </span>
+      }
+    </div>
+  </div>
+</div>
