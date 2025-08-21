@@ -2,7 +2,7 @@
   <!-- Header -->
   <header class="header">
     <div class="logo">
-      <img src="/assets/icons/logo_icon.svg" alt="Videoflix" />
+      <img src="/assets/icons/logo_icon.svg" alt="Videofix" />
       <span>Videoflix</span>
     </div>
     <div class="header-actions">
@@ -14,54 +14,67 @@
   </header>
 
   <!-- Main Video Player -->
-  <section class="main-video" *ngIf="currentVideo$ | async as currentVideo">
-    <app-video-player 
-      [video]="currentVideo"
-      [isMainPlayer]="true"
-      (playVideo)="onPlayVideo($event)">
-    </app-video-player>
-  </section>
+  @if (currentVideo$ | async; as currentVideo) {
+    <section class="main-video">
+      <app-video-player 
+        [video]="currentVideo"
+        [isMainPlayer]="true"
+        (playVideo)="onPlayVideo($event)">
+      </app-video-player>
+    </section>
+  }
 
   <!-- Video Categories -->
   <main class="video-categories">
     <!-- Latest Videos Section -->
-    <section class="category-section" *ngIf="(latestVideos$ | async)?.length">
-      <h2>Neueste Videos</h2>
-      <div class="video-grid">
-        <app-video-card 
-          *ngFor="let video of latestVideos$ | async" 
-          [video]="video"
-          (playVideo)="onPlayVideo($event)">
-        </app-video-card>
-      </div>
-    </section>
+    @if (latestVideos$ | async; as latestVideos) {
+      @if (latestVideos.length > 0) {
+        <section class="category-section">
+          <h2>Neueste Videos</h2>
+          <div class="video-grid">
+            @for (video of latestVideos; track video.id) {
+              <app-video-card 
+                [video]="video"
+                (playVideo)="onPlayVideo($event)">
+              </app-video-card>
+            }
+          </div>
+        </section>
+      }
+    }
 
     <!-- Category Sections -->
-    <section 
-      class="category-section" 
-      *ngFor="let category of categories"
-      [attr.data-category]="category">
-      <h2>{{ getCategoryDisplayName(category) }}</h2>
-      <div class="video-grid">
-        <app-video-card 
-          *ngFor="let video of getVideosByCategory(category)" 
-          [video]="video"
-          (playVideo)="onPlayVideo($event)">
-        </app-video-card>
-      </div>
-    </section>
+    @for (category of categories; track category) {
+      <section 
+        class="category-section" 
+        [attr.data-category]="category">
+        <h2>{{ getCategoryDisplayName(category) }}</h2>
+        <div class="video-grid">
+          @for (video of getVideosByCategory(category); track video.id) {
+            <app-video-card 
+              [video]="video"
+              (playVideo)="onPlayVideo($event)">
+            </app-video-card>
+          }
+        </div>
+      </section>
+    }
   </main>
 
   <!-- Loading State -->
-  <div class="loading" *ngIf="isLoading">
-    <div class="spinner"></div>
-    <p>Videos werden geladen...</p>
-  </div>
+  @if (isLoading) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Videos werden geladen...</p>
+    </div>
+  }
 
   <!-- Error State -->
-  <div class="error" *ngIf="errorMessage">
-    <img src="/assets/img/warning.png" alt="Error" />
-    <p>{{ errorMessage }}</p>
-    <button (click)="loadVideos()" class="retry-btn">Erneut versuchen</button>
-  </div>
+  @if (errorMessage) {
+    <div class="error">
+      <img src="/assets/img/warning.png" alt="Error" />
+      <p>{{ errorMessage }}</p>
+      <button (click)="loadVideos()" class="retry-btn">Erneut versuchen</button>
+    </div>
+  }
 </div>
