@@ -18,13 +18,13 @@ import { VideoPlayerComponent } from './components/video-player/video-player.com
       <!-- Header -->
       <header class="header">
         <div class="logo">
-          <img src="/icons/logo_icon.svg" alt="Videoflix" />
+          <img src="/assets/icons/logo_icon.svg" alt="Videoflix" />
           <span>Videoflix</span>
         </div>
         <div class="header-actions">
           <span>{{ currentUser?.first_name || currentUser?.email }}</span>
           <button (click)="logout()" class="logout-btn">
-            <img src="/icons/logout.svg" alt="Logout" />
+            <img src="/assets/icons/logout.svg" alt="Logout" />
           </button>
         </div>
       </header>
@@ -76,7 +76,7 @@ import { VideoPlayerComponent } from './components/video-player/video-player.com
 
       <!-- Error State -->
       <div class="error" *ngIf="errorMessage">
-        <img src="/img/warning.png" alt="Error" />
+        <img src="/assets/img/warning.png" alt="Error" />
         <p>{{ errorMessage }}</p>
         <button (click)="loadVideos()" class="retry-btn">Erneut versuchen</button>
       </div>
@@ -356,5 +356,4 @@ export class VideoListComponent implements OnInit, OnDestroy {
     this.authService.logout();
     this.router.navigate(['/auth/login']);
   }
-
 }

@@ -11,7 +11,7 @@
 
     <!-- Email Field -->
     <div class="form_group" [class.error]="isFieldInvalid('email')">
-      <img src="/icons/mail.png" alt="Icon" />
+      <img src="/assets/icons/mail.png" alt="Icon" />
       <input
         type="email"
         id="email"
@@ -28,7 +28,7 @@
 
     <!-- Password Field -->
     <div class="form_group" [class.error]="isFieldInvalid('password')">
-      <img src="/icons/password.png" alt="Icon" />
+      <img src="/assets/icons/password.png" alt="Icon" />
       <input
         [type]="showPassword ? 'text' : 'password'"
         id="password"
@@ -42,7 +42,7 @@
         (click)="togglePassword()"
         class="password_eye"
         [src]="
-          showPassword ? '/icons/visibility_off.svg' : '/icons/visibility.svg'
+          showPassword ? '/assets/icons/visibility_off.svg' : '/assets/icons/visibility.svg'
         "
         alt="Toggle password visibility"
       />
@@ -59,7 +59,7 @@
         registerForm.hasError('passwordMismatch')
       "
     >
-      <img src="/icons/password.png" alt="Icon" />
+      <img src="/assets/icons/password.png" alt="Icon" />
       <input
         [type]="showConfirmPassword ? 'text' : 'password'"
         id="confirmPassword"
@@ -74,8 +74,8 @@
         class="password_eye"
         [src]="
           showConfirmPassword
-            ? '/icons/visibility_off.svg'
-            : '/icons/visibility.svg'
+            ? '/assets/icons/visibility_off.svg'
+            : '/assets/icons/visibility.svg'
         "
         alt="Toggle password visibility"
       />

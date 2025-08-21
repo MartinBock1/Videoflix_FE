@@ -28,7 +28,7 @@ declare var Hls: any;
            <div class="video-overlay" (click)="onVideoClick()">
             @if(!isPlaying) {
               <div class="play-button">
-                <img src="/icons/play_arrow.svg" alt="Play" />
+                <img src="/assets/icons/play_arrow.svg" alt="Play" />
               </div>
             }
              
@@ -41,7 +41,7 @@ declare var Hls: any;
                   }
                   <div class="video-actions">
                     <button class="play-btn" (click)="togglePlay($event)">
-                      <img [src]="isPlaying ? '/icons/pause.svg' : '/icons/play_arrow.svg'" alt="Play/Pause" />
+                      <img [src]="isPlaying ? '/assets/icons/pause.svg' : '/assets/icons/play_arrow.svg'" alt="Play/Pause" />
                       {{ isPlaying ? 'Pause' : 'Play' }}
                     </button>
                   </div>
@@ -58,7 +58,7 @@ declare var Hls: any;
         <!-- Error State -->
         <div class="error-overlay" *ngIf="hasError">
           <div class="error-content">
-            <img src="/img/warning.png" alt="Error" />
+            <img src="/assets/img/warning.png" alt="Error" />
             <p>Video konnte nicht geladen werden</p>
             <button (click)="retryLoad()">Erneut versuchen</button>
           </div>

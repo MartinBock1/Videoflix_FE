@@ -14,7 +14,7 @@
         <!-- Success State -->
         @if (activationSuccess) {
             <div class="activation_success">
-                <img src="/icons/check_circle.svg" alt="Success" class="success_icon">
+                <img src="/assets/icons/check_circle.svg" alt="Success" class="success_icon">
                 <h1>Account Activated!</h1>
                 <p>Your account has been successfully activated. You can now sign in to Videoflix.</p>
                 
@@ -29,7 +29,7 @@
         <!-- Error State -->
         @if (activationError) {
             <div class="activation_error">
-                <img src="/icons/error.svg" alt="Error" class="error_icon">
+                <img src="/assets/icons/error.svg" alt="Error" class="error_icon">
                 <h1>Activation Failed</h1>
                 <p>{{ errorMessage }}</p>
                 

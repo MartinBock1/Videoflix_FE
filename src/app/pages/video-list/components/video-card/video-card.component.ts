@@ -10,11 +10,11 @@ import { Video } from '../../../../shared/interfaces/api.interfaces';
     <div class="video-card" (click)="onPlayVideo()">
       <div class="video-thumbnail">
         <img 
-          [src]="video.thumbnail || '/img/index_bg.jpg'" 
+          [src]="video.thumbnail || '/assets/img/index_bg.jpg'" 
           [alt]="video.title"
           (error)="onImageError($event)" />
         <div class="play-overlay">
-          <img src="/icons/play_arrow.svg" alt="Play" />
+          <img src="/assets/icons/play_arrow.svg" alt="Play" />
         </div>
         <div class="video-duration">
           Video
@@ -147,7 +147,7 @@ export class VideoCardComponent {
 
   onImageError(event: Event): void {
     const img = event.target as HTMLImageElement;
-    img.src = '/img/index_bg.jpg'; // Fallback zu vorhandenem Bild
+    img.src = '/assets/img/index_bg.jpg'; // Fallback zu vorhandenem Bild
   }
 
   formatDate(dateString: string): string {
