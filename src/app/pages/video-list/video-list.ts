@@ -8,25 +8,27 @@ import { AuthService } from '../../shared/services/auth.service';
 import { Video, User } from '../../shared/interfaces/api.interfaces';
 import { VideoCard } from './video-card/video-card';
 import { VideoPlayer } from './video-player/video-player';
+import { Header } from '../../shared/header/header';
+import { Footer } from '../../shared/footer/footer';
 
 @Component({
   selector: 'app-video-list',
   standalone: true,
-  imports: [CommonModule, VideoCard, VideoPlayer],
+  imports: [CommonModule, VideoCard, VideoPlayer, Header, Footer],
   templateUrl: './video-list.html',
-  styleUrls: ['./video-list.scss']
+  styleUrls: ['./video-list.scss'],
 })
 export class VideoList implements OnInit, OnDestroy {
   videos$: Observable<Video[]>;
   latestVideos$: Observable<Video[]>;
   currentVideo$: Observable<Video | null>;
-  
+
   categories: string[] = [];
   isLoading = false;
   errorMessage = '';
-  
+
   currentUser: User | null = null;
-  
+
   private subscriptions = new Subscription();
 
   constructor(
@@ -52,7 +54,7 @@ export class VideoList implements OnInit, OnDestroy {
   private setupSubscriptions(): void {
     // Update categories when videos change
     this.subscriptions.add(
-      this.videos$.subscribe(videos => {
+      this.videos$.subscribe((videos) => {
         this.categories = this.videoService.getCategories();
       })
     );
@@ -69,16 +71,19 @@ export class VideoList implements OnInit, OnDestroy {
   loadVideos(): void {
     this.isLoading = true;
     this.errorMessage = '';
-    
+
     this.subscriptions.add(
       this.videoService.loadAndSetupVideos().subscribe({
         next: (response) => {
           this.isLoading = false;
           if (!response.success) {
             this.errorMessage = response.message || 'Failed to load videos';
-            
+
             // If authorization error, redirect to login
-            if (response.message?.includes('autorisiert') || response.message?.includes('Unauthorized')) {
+            if (
+              response.message?.includes('autorisiert') ||
+              response.message?.includes('Unauthorized')
+            ) {
               setTimeout(() => {
                 this.authService.logout();
                 this.router.navigate(['/auth/login']);
@@ -88,17 +93,19 @@ export class VideoList implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.isLoading = false;
-          
+
           if (error.status === 401) {
-            this.errorMessage = 'Sitzung abgelaufen. Sie werden zur Anmeldung weitergeleitet...';
+            this.errorMessage =
+              'Sitzung abgelaufen. Sie werden zur Anmeldung weitergeleitet...';
             setTimeout(() => {
               this.authService.logout();
               this.router.navigate(['/auth/login']);
             }, 2000);
           } else {
-            this.errorMessage = 'Fehler beim Laden der Videos. Bitte versuchen Sie es erneut.';
+            this.errorMessage =
+              'Fehler beim Laden der Videos. Bitte versuchen Sie es erneut.';
           }
-        }
+        },
       })
     );
   }
@@ -114,18 +121,20 @@ export class VideoList implements OnInit, OnDestroy {
   getCategoryDisplayName(category: string): string {
     // Capitalize first letter and handle special cases
     const displayNames: { [key: string]: string } = {
-      'action': 'Action',
-      'comedy': 'Komödie',
-      'drama': 'Drama',
-      'thriller': 'Thriller',
-      'horror': 'Horror',
-      'romance': 'Romantik',
-      'scifi': 'Science Fiction',
-      'documentary': 'Dokumentation'
+      action: 'Action',
+      comedy: 'Komödie',
+      drama: 'Drama',
+      thriller: 'Thriller',
+      horror: 'Horror',
+      romance: 'Romantik',
+      scifi: 'Science Fiction',
+      documentary: 'Dokumentation',
     };
-    
-    return displayNames[category.toLowerCase()] || 
-           category.charAt(0).toUpperCase() + category.slice(1);
+
+    return (
+      displayNames[category.toLowerCase()] ||
+      category.charAt(0).toUpperCase() + category.slice(1)
+    );
   }
 
   logout(): void {

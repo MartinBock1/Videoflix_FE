@@ -1,7 +1,20 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  OnDestroy,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Video } from '../../../shared/interfaces/api.interfaces';
 import { VideoService } from '../../../shared/services/video.service';
+import { NotificationService } from '../../../shared/services/notification.service';
 
 declare var Hls: any;
 
@@ -10,15 +23,18 @@ declare var Hls: any;
   standalone: true,
   imports: [CommonModule],
   templateUrl: './video-player.html',
-  styleUrls: ['./video-player.scss']
+  styleUrls: ['./video-player.scss'],
 })
-export class VideoPlayer implements OnInit, OnDestroy, AfterViewInit {
+export class VideoPlayer
+  implements OnInit, OnDestroy, AfterViewInit, OnChanges
+{
   @Input() video: Video | null = null;
   @Input() isMainPlayer = false;
   @Input() autoPlay = false;
   @Output() playVideo = new EventEmitter<Video>();
 
-  @ViewChild('videoElement', { static: false }) videoElement!: ElementRef<HTMLVideoElement>;
+  @ViewChild('videoElement', { static: false })
+  videoElement!: ElementRef<HTMLVideoElement>;
 
   isPlaying = false;
   isLoading = false;
@@ -26,18 +42,46 @@ export class VideoPlayer implements OnInit, OnDestroy, AfterViewInit {
   showControls = false;
   showResolutionSelector = false;
   currentResolution = '720p';
-  
+
   private hls: any;
   private controlsTimeout: any;
 
-  constructor(private videoService: VideoService) {}
+  constructor(
+    private videoService: VideoService,
+    private notificationService: NotificationService
+  ) {}
 
   ngOnInit(): void {
+    this.setDefaultResolution();
     this.showControls = !this.isMainPlayer;
+  }
+
+  private setDefaultResolution(): void {
+    const screenWidth = window.innerWidth;
+    if (screenWidth < 720) {
+      // Für kleine Bildschirme (Mobile)
+      this.currentResolution = '480p';
+    } else if (screenWidth < 1920) {
+      // Für mittlere Bildschirme (Laptop)
+      this.currentResolution = '720p';
+    } else {
+      // Für große Bildschirme (Desktop)
+      this.currentResolution = '1080p';
+    }
+    console.log(
+      `%c[VideoPlayer] Default resolution set to: ${this.currentResolution} based on screen width ${screenWidth}px`,
+      'color: orange;'
+    );
   }
 
   ngAfterViewInit(): void {
     if (this.video) {
+      this.loadVideo();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['video'] && !changes['video'].isFirstChange()) {
       this.loadVideo();
     }
   }
@@ -55,11 +99,18 @@ export class VideoPlayer implements OnInit, OnDestroy, AfterViewInit {
     this.isLoading = true;
     this.hasError = false;
 
-    const hlsUrl = this.videoService.getHlsUrl(this.video.id, this.currentResolution);
-    
+    const hlsUrl = this.videoService.getHlsUrl(
+      this.video.id,
+      this.currentResolution
+    );
+
     if (typeof Hls !== 'undefined' && Hls.isSupported()) {
       this.loadWithHls(hlsUrl);
-    } else if (this.videoElement.nativeElement.canPlayType('application/vnd.apple.mpegurl')) {
+    } else if (
+      this.videoElement.nativeElement.canPlayType(
+        'application/vnd.apple.mpegurl'
+      )
+    ) {
       // Safari native HLS support
       this.loadNative(hlsUrl);
     } else {
@@ -71,11 +122,11 @@ export class VideoPlayer implements OnInit, OnDestroy, AfterViewInit {
 
   private loadWithHls(hlsUrl: string): void {
     this.destroyHls();
-    
+
     this.hls = new Hls({
       xhrSetup: (xhr: XMLHttpRequest) => {
         xhr.withCredentials = true;
-      }
+      },
     });
 
     this.hls.loadSource(hlsUrl);
@@ -131,11 +182,12 @@ export class VideoPlayer implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private play(): void {
-    this.videoElement.nativeElement.play()
+    this.videoElement.nativeElement
+      .play()
       .then(() => {
         this.isPlaying = true;
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Play error:', error);
         this.hasError = true;
       });
@@ -148,11 +200,11 @@ export class VideoPlayer implements OnInit, OnDestroy, AfterViewInit {
 
   private showControlsTemporarily(): void {
     this.showControls = true;
-    
+
     if (this.controlsTimeout) {
       clearTimeout(this.controlsTimeout);
     }
-    
+
     this.controlsTimeout = setTimeout(() => {
       if (this.isPlaying) {
         this.showControls = false;
@@ -164,6 +216,7 @@ export class VideoPlayer implements OnInit, OnDestroy, AfterViewInit {
     const select = event.target as HTMLSelectElement;
     this.currentResolution = select.value;
     this.loadVideo();
+    this.notificationService.show(`Qualität auf ${this.currentResolution} umgeschaltet`);
   }
 
   onLoadStart(): void {

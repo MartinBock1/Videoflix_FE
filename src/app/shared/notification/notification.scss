@@ -1,0 +1,24 @@
+.notification-toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+      z-index: 9999;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      font-weight: 500;
+    }
+
+    .toast-info {
+      background-color: #007bff; /* Blau */
+    }
+
+    .toast-success {
+      background-color: #28a745; /* Grün */
+    }
+
+    .toast-error {
+      background-color: #dc3545; /* Rot */
+    }
