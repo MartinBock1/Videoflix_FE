@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { BehaviorSubject, Observable, throwError, of } from 'rxjs';
+import { map, catchError, tap } from 'rxjs/operators';
 
 /**
  * Interface for user registration data
@@ -64,6 +64,7 @@ export interface User {
 export class AuthService {
   // private readonly API_BASE_URL = 'http://127.0.0.1:8000/api/';
   private readonly API_BASE_URL = 'http://localhost:8000/api/';
+  private readonly VALIDATE_URL = 'user/';
   private readonly LOGIN_URL = 'login/';
   private readonly REGISTER_URL = 'register/';
   private readonly FORGET_PASSWORD_URL = 'password_reset/';
@@ -79,20 +80,7 @@ export class AuthService {
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  constructor(private http: HttpClient) {
-    this.checkAuthStatus();
-  }
-
-  /**
-   * Check if user is authenticated on service initialization
-   */
-  private checkAuthStatus(): void {
-    const token = this.getToken();
-    if (token) {
-      // TODO: Validate token with backend
-      this.isAuthenticatedSubject.next(true);
-    }
-  }
+  constructor(private http: HttpClient) {  }
 
   /**
    * Register a new user
@@ -182,19 +170,23 @@ export class AuthService {
   }
 
   /**
-   * Validate current session
+   * Validate user session by making an authenticated request
    */
-  validateSession(): Observable<ApiResponse> {
-    return this.http
-      .get<any>(this.getFullUrl('/api/auth/validate/'), {
-        withCredentials: true,
+  validateSession(): Observable<boolean> {
+    console.log('[AuthService] validateSession() called...');
+    return this.http.get<any[]>(this.getFullUrl('video/'), { withCredentials: true }).pipe(
+      map(() => {
+        console.log('%c[AuthService] validateSession SUCCESS. Setting auth status to true.', 'color: green;');
+        this.isAuthenticatedSubject.next(true);
+        return true;
+      }),
+      catchError(() => {
+        console.error('%c[AuthService] validateSession FAILED. Setting auth status to false.', 'color: red;');
+        this.isAuthenticatedSubject.next(false);
+        this.currentUserSubject.next(null);
+        return of(false);
       })
-      .pipe(
-        map((response) => this.handleSuccessResponse(response)),
-        catchError((error) => {
-          return this.handleErrorResponse(error);
-        })
-      );
+    );
   }
 
   /**
@@ -263,11 +255,12 @@ export class AuthService {
    * Get current authentication status
    */
   isAuthenticated(): boolean {
-    const hasAuthStatus = this.isAuthenticatedSubject.value;
-    const hasUser = this.currentUserSubject.value !== null;
-    const hasToken = this.getToken() !== null;
+    // const hasAuthStatus = this.isAuthenticatedSubject.value;
+    // const hasUser = this.currentUserSubject.value !== null;
+    // const hasToken = this.getToken() !== null;
 
-    return hasToken || (hasAuthStatus && hasUser);
+    // return hasToken || (hasAuthStatus && hasUser);
+     return this.isAuthenticatedSubject.value;
   }
 
   /**

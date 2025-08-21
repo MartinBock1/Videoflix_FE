@@ -72,7 +72,7 @@ export interface Video {
   title: string;
   description?: string;
   video_file?: string;
-  thumbnail?: string;
+  thumbnail_url?: string;
   category?: string;
   created_at?: string;
 }

@@ -6,9 +6,10 @@ import { Activate } from './main/auth/activate/activate';
 import { ForgotPassword } from './main/auth/forgot-password/forgot-password';
 import { ConfirmPassword } from './main/auth/confirm-password/confirm-password';
 import { Privacy } from './shared/privacy/privacy';
-import { Imprint } from './shared/imprint/imprint'; 
-import { AuthGuard } from './shared/guards/auth.guard'; 
+import { Imprint } from './shared/imprint/imprint';
+import { AuthGuard } from './shared/guards/auth.guard';
 import { VideoList } from './pages/video-list/video-list';
+
 
 export const routes: Routes = [
   // Landing Page (Öffentlich zugänglich)
@@ -20,10 +21,10 @@ export const routes: Routes = [
   { path: 'auth/activate', component: Activate },
   { path: 'auth/activate.html', component: Activate },
   { path: 'auth/forgot-password', component: ForgotPassword },
-  { path: 'auth/forgot_password.html', component: ForgotPassword },  // Backend verwendet Unterstrich!
+  { path: 'auth/forgot_password.html', component: ForgotPassword }, // Backend verwendet Unterstrich!
   { path: 'auth/confirm-password', component: ConfirmPassword },
   { path: 'auth/confirm-password.html', component: ConfirmPassword },
-  { path: 'auth/confirm_password.html', component: ConfirmPassword },  // Backend verwendet Unterstrich!
+  { path: 'auth/confirm_password.html', component: ConfirmPassword }, // Backend verwendet Unterstrich!
 
   // Statische Seiten (Öffentlich)
   { path: 'privacy', component: Privacy },
@@ -31,8 +32,12 @@ export const routes: Routes = [
 
   // Geschützte Routen würden hier mit AuthGuard kommen
   // { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
-  { path: 'videos', component: VideoList, canActivate: [AuthGuard] },
-  
+  {
+    path: 'videos',
+    component: VideoList,
+    canActivate: [AuthGuard],
+  },
+
   // Fallback - redirect to home
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: '' },
 ];

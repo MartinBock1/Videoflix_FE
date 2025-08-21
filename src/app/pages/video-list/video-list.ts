@@ -41,15 +41,8 @@ export class VideoList implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Check if user is authenticated before loading videos
-    if (this.currentUser && this.authService.isAuthenticated()) {
-      // Load videos directly
-      this.loadVideos();
-      this.setupSubscriptions();
-    } else {
-      // Redirect to login if not authenticated
-      this.router.navigate(['/auth/login']);
-    }
+    this.loadVideos();
+    this.setupSubscriptions();
   }
 
   ngOnDestroy(): void {

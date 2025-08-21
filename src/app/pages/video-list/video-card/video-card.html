@@ -1,7 +1,7 @@
 <div class="video-card" (click)="onPlayVideo()">
   <div class="video-thumbnail">
     <img 
-      [src]="video.thumbnail || '/assets/img/index_bg.jpg'" 
+      [src]="video.thumbnail_url || '/assets/img/index_bg.jpg'"
       [alt]="video.title"
       (error)="onImageError($event)" />
     <div class="play-overlay">

@@ -1,42 +1,36 @@
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { inject } from '@angular/core';
+import { Router, UrlTree } from '@angular/router';
+import { Observable, of } from 'rxjs';
+import { switchMap, map, tap } from 'rxjs/operators'; // tap importieren
 import { AuthService } from '../services/auth.service';
 
-/**
- * Auth Guard to protect routes that require authentication
- */
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthGuard {
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+export const AuthGuard = (): Observable<boolean> => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
 
-  /**
-   * Check if user can activate the route
-   */
-  canActivate(): Observable<boolean> | boolean {
-    return this.authService.isAuthenticated$.pipe(
-      map(isAuthenticated => {
-        if (isAuthenticated) {
-          return true;
-        } else {
-          // Redirect to login page if not authenticated
-          this.router.navigate(['/auth/login']);
-          return false;
-        }
-      })
-    );
+  console.log('[AuthGuard] Running...');
+
+  if (authService.isAuthenticated()) {
+    console.log('%c[AuthGuard] Already authenticated. Access GRANTED.', 'color: green;');
+    return of(true);
   }
 
-  /**
-   * Check if user can load child routes
-   */
-  canActivateChild(): Observable<boolean> | boolean {
-    return this.canActivate();
-  }
-}
+  console.log('%c[AuthGuard] Not authenticated. Trying to validate session...', 'color: blue;');
+  
+  return authService.validateSession().pipe(
+    tap(isSessionValid => {
+      if (!isSessionValid) {
+        console.log('%c[AuthGuard] Session validation FAILED. Redirecting to login inside tap().', 'color: red;');
+        router.navigate(['/auth/login']);
+      }
+    }),
+    map(isSessionValid => {
+      if (isSessionValid) {
+        console.log('%c[AuthGuard] Session validation SUCCESS. Access GRANTED.', 'color: green;');
+        return true;
+      } else {
+        return false;
+      }
+    })
+  );
+};

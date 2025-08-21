@@ -2,7 +2,7 @@
   <div class="video-container">
     <video 
       #videoElement
-      [poster]="video?.thumbnail"
+      [poster]="video?.thumbnail_url"
       [controls]="showControls"
       (click)="onVideoClick()"
       (loadstart)="onLoadStart()"
