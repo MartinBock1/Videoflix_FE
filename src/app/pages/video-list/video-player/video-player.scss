@@ -1,3 +1,5 @@
+@import './../../../../styles.scss';
+
 .video-player {
     position: relative;
     width: 100%;
@@ -58,32 +60,6 @@ video {
     display: flex;
     gap: 1rem;
 }
-
-// .play-btn {
-//     @include flex-center($gap: 0.5rem);
-//     // display: flex;
-//     // align-items: center;
-//     // gap: 0.5rem;
-//     background: #e50914;
-//     color: #fff;
-//     border: none;
-//     padding: 0.75rem 2rem;
-//     border-radius: 4px;
-//     font-size: 1.1rem;
-//     font-weight: 600;
-//     cursor: pointer;
-//     transition: background-color 0.2s;
-// }
-
-// .play-btn:hover {
-//     background: #f40612;
-// }
-
-// .play-btn img {
-//     width: 1.5rem;
-//     height: 1.5rem;
-//     filter: invert(1);
-// }
 
 .loading-overlay {
     position: absolute;

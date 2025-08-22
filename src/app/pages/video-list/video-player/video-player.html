@@ -13,13 +13,7 @@
     
     <!-- Custom Controls Overlay -->
      @if(!showControls) {
-       <div class="video-overlay" (click)="onVideoClick()">
-        <!-- @if(!isPlaying) {
-          <div class="play-button">
-            <img src="/assets/icons/play_arrow.svg" alt="Play" />
-          </div>
-        } -->
-         
+       <div class="video-overlay" (click)="onVideoClick()">         
          <!-- Video Info -->
           @if(isMainPlayer) {
             <div class="video-info-overlay">
