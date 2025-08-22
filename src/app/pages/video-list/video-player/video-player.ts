@@ -40,7 +40,6 @@ export class VideoPlayer
   isLoading = false;
   hasError = false;
   showControls = false;
-  showResolutionSelector = false;
   currentResolution = '720p';
 
   private hls: any;

@@ -39,7 +39,7 @@ export class VideoList implements OnInit, OnDestroy {
     this.videos$ = this.videoService.videos$;
     this.latestVideos$ = this.videoService.latestVideos$;
     this.currentVideo$ = this.videoService.currentVideo$;
-    this.currentUser = this.authService.getCurrentUser();
+    // this.currentUser = this.authService.getCurrentUser();
   }
 
   ngOnInit(): void {
@@ -56,6 +56,11 @@ export class VideoList implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.videos$.subscribe((videos) => {
         this.categories = this.videoService.getCategories();
+      })
+    );
+    this.subscriptions.add(
+      this.authService.currentUser$.subscribe(user => {
+        this.currentUser = user;
       })
     );
   }
@@ -96,14 +101,14 @@ export class VideoList implements OnInit, OnDestroy {
 
           if (error.status === 401) {
             this.errorMessage =
-              'Sitzung abgelaufen. Sie werden zur Anmeldung weitergeleitet...';
+              'Session expired. You will be redirected to the login page...';
             setTimeout(() => {
               this.authService.logout();
               this.router.navigate(['/auth/login']);
             }, 2000);
           } else {
             this.errorMessage =
-              'Fehler beim Laden der Videos. Bitte versuchen Sie es erneut.';
+              'Error loading videos. Please try again.';
           }
         },
       })

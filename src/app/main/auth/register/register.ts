@@ -1,28 +1,32 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
+
 import { Header } from '../../../shared/header/header';
 import { Footer } from '../../../shared/footer/footer';
 import { AuthService } from '../../../shared/services/auth.service';
 
 @Component({
   selector: 'app-register',
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterModule,
-    Header,
-    Footer
-  ],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, Header, Footer],
   templateUrl: './register.html',
-  styleUrl: './register.scss'
+  styleUrl: './register.scss',
 })
-export class Register implements OnInit {
+export class Register implements OnInit, OnDestroy {
   registerForm!: FormGroup;
   showPassword = false;
   showConfirmPassword = false;
   isSubmitting = false;
+  errorMessage = '';
+
+  private formChangesSubscription?: Subscription;
 
   constructor(
     private fb: FormBuilder,
@@ -34,17 +38,31 @@ export class Register implements OnInit {
   ngOnInit(): void {
     this.initializeForm();
     this.loadEmailFromQuery();
+    this.formChangesSubscription = this.registerForm.valueChanges.subscribe(() => {
+      if (this.errorMessage) {
+        this.errorMessage = '';
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.formChangesSubscription) {
+      this.formChangesSubscription.unsubscribe();
+    }
   }
 
   private initializeForm(): void {
-    this.registerForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', [Validators.required]],
-      privacyPolicy: [false, [Validators.requiredTrue]]
-    }, { 
-      validators: this.passwordsMatchValidator 
-    });
+    this.registerForm = this.fb.group(
+      {
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(8)]],
+        confirmPassword: ['', [Validators.required]],
+        privacyPolicy: [false, [Validators.requiredTrue]],
+      },
+      {
+        validators: this.passwordsMatchValidator,
+      }
+    );
   }
 
   /**
@@ -61,20 +79,24 @@ export class Register implements OnInit {
   private passwordsMatchValidator(group: FormGroup): any {
     const password = group.get('password');
     const confirmPassword = group.get('confirmPassword');
-    
+
     if (!password || !confirmPassword) {
       return null;
     }
 
-    return password.value === confirmPassword.value ? null : { passwordMismatch: true };
+    return password.value === confirmPassword.value
+      ? null
+      : { passwordMismatch: true };
   }
 
   // Check if a field is invalid and has been touched
   isFieldInvalid(fieldName: string): boolean {
     const field = this.registerForm.get(fieldName);
     if (fieldName === 'confirmPassword') {
-      return !!(field && field.invalid && field.touched) || 
-             !!(this.registerForm.hasError('passwordMismatch') && field?.touched);
+      return (
+        !!(field && field.invalid && field.touched) ||
+        !!(this.registerForm.hasError('passwordMismatch') && field?.touched)
+      );
     }
     return !!(field && field.invalid && field.touched);
   }
@@ -93,30 +115,33 @@ export class Register implements OnInit {
   onSubmit(): void {
     if (this.registerForm.valid) {
       this.isSubmitting = true;
-      
+
       const { email, password, confirmPassword } = this.registerForm.value;
-      
+
       const registerData = {
         email,
         password,
-        confirmed_password: confirmPassword
+        confirmed_password: confirmPassword,
       };
-      
+
       // Real API call to backend
       this.authService.register(registerData).subscribe({
         next: (response) => {
           this.isSubmitting = false;
           this.router.navigate(['/auth/login'], {
-            queryParams: { message: 'Registration successful! Please check your email for activation.' }
+            queryParams: {
+              message:
+                'Registration successful! Please check your email for activation.',
+            },
           });
         },
         error: (error) => {
-          // TODO: Show error message to user
+          this.errorMessage = error.message || 'Registration failed. Please try again.';
           this.isSubmitting = false;
         },
         complete: () => {
           this.isSubmitting = false;
-        }
+        },
       });
     } else {
       // Mark all fields as touched to show validation errors

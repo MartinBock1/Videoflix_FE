@@ -1,5 +1,9 @@
- @if (notification$ | async; as notification) {
-      <div class="notification-toast" [ngClass]="'toast-' + notification.type" [@fadeInOut]>
-        {{ notification.message }}
-      </div>
-    }
+@if (notification$ | async; as notification) {
+<div
+  class="notification-toast"
+  [ngClass]="'toast-' + notification.type"
+  [@fadeInOut]
+>
+  {{ notification.message }}
+</div>
+}
