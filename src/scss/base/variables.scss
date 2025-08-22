@@ -44,6 +44,7 @@ $form-input-active-border-color: rgba(46, 62, 223, 1);
 $form-input-error-border-color: rgba(255, 0, 4, 1);
 $form-input-bg-color: rgba(27,27,34,0.85);
 $form-text-color: rgba(211, 211, 211, 1);
+$form-placeholder-color: rgba(255, 255, 255, 0.7);
 
 $card-bg-color: rgba(33, 48, 73, 1);
 $card-border: 1px solid rgba(46, 62, 223, 1);
@@ -62,13 +63,3 @@ $error-accent-color: #FF002E;
 $error-border-radius: 20px;
 $error-padding: 12px 16px;
 $error-gap: 16px;
-
-// Media Query Mixins
-@mixin mobile {
-  @media screen and (max-width: 769px) {
-    $form-pad: 32px;
-    $form-pad-small: 8px;
-    $form-input-pad: 8px 8px;
-    @content;
-  }
-}

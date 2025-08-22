@@ -32,8 +32,7 @@
 
         input {
             width: 100%;
-            padding: $form-input-pad;
-            padding-left: 48px;
+            padding: 20px 16px 8px 48px;
             background: transparent;
             border: none;
             outline: none;
@@ -42,7 +41,7 @@
             z-index: 1;
 
             &::placeholder {
-                color: transparent;
+                color: $form-placeholder-color;
             }
         }
 
@@ -60,7 +59,10 @@
 
         input:focus+label,
         input:not(:placeholder-shown)+label {
-            color: transparent;
+            top: 8px;
+            transform: translateY(0);
+            font-size: 12px;
+            color: $font-sec-color;
         }
 
         // Focus State
