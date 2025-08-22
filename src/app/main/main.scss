@@ -100,7 +100,6 @@
             @include flex-center($jc: flex-start);
         }
 
-        // Ab 500px: Input wird breiter
         input {
             width: 100%;
             max-width: 430px;
