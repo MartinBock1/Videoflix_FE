@@ -1,4 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core'; // OnInit importieren
+// =================================================================
+// Standard Angular and RxJS Imports
+// =================================================================
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -6,13 +9,22 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { Router, RouterModule, ActivatedRoute } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute, Params } from '@angular/router';
+import { lastValueFrom, Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
+
+// =================================================================
+// Custom Application-Specific Imports
+// =================================================================
 import { Header } from '../../../shared/header/header';
 import { Footer } from '../../../shared/footer/footer';
 import { AuthService } from '../../../shared/services/auth.service';
-import { lastValueFrom, Subscription } from 'rxjs';
-import { take, filter } from 'rxjs/operators';
+import { ApiResponse } from '../../../shared/interfaces/api.interfaces';
 
+/**
+ * @Component
+ * Defines the metadata for the Login component.
+ */
 @Component({
   selector: 'app-login',
   imports: [CommonModule, ReactiveFormsModule, RouterModule, Header, Footer],
@@ -20,17 +32,43 @@ import { take, filter } from 'rxjs/operators';
   styleUrl: './login.scss',
 })
 export class Login implements OnInit, OnDestroy {
-  // OnInit implementieren
+  /** 
+   * The reactive form group for the login form. 
+   */
   loginForm: FormGroup;
+  /** 
+   * A flag to control the visibility of the password text. 
+   */
   showPassword = false;
+  /** 
+   * A flag to indicate when the form is being submitted. 
+   */
   isSubmitting = false;
+  /** 
+   * A string to hold and display any login error messages. 
+   */
   loginError = '';
+  /** 
+   * A string to hold and display temporary success messages (e.g., from password reset). 
+   */
   successMessage = '';
 
-  private queryParamsSubscription?: Subscription;
+  /** 
+   * A timer ID for clearing the success message, used for cleanup in ngOnDestroy. 
+   */
   private successTimer?: number;
+  /** 
+   * Holds the subscription to form changes for cleanup. 
+   */
   private formChangesSubscription?: Subscription;
 
+  /**
+   * The constructor for the Login component.
+   * @param {FormBuilder} fb The Angular service for building reactive forms.
+   * @param {Router} router The Angular service for programmatic navigation.
+   * @param {AuthService} authService Service for handling authentication API calls.
+   * @param {ActivatedRoute} route Service for accessing route parameters.
+   */
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -40,23 +78,33 @@ export class Login implements OnInit, OnDestroy {
     this.loginForm = this.createLoginForm();
   }
   
+  // =================================================================
+  // Lifecycle Hooks
+  // =================================================================
+
   /**
-   * Lifecycle hook that is called after data-bound properties are initialized.
-   * Used to check for success messages and set up form value changes.
+   * Angular lifecycle hook. Initializes component setup.
    */
   ngOnInit(): void {
     this.checkForSuccessMessage();
-
-    // Clear login error when user starts typing
-     this.formChangesSubscription = this.loginForm.valueChanges.subscribe(() => {
-      if (this.loginError) {
-        this.loginError = '';
-      }
-    });
+    this.setupFormListeners();
   }
 
   /**
-   * Creates the reactive login form with validation
+   * Angular lifecycle hook. Cleans up subscriptions and timers.
+   */
+  ngOnDestroy(): void {
+    if (this.successTimer) clearTimeout(this.successTimer);
+    if (this.formChangesSubscription) this.formChangesSubscription.unsubscribe();
+  }
+
+  // =================================================================
+  // Form Setup and Interaction
+  // =================================================================
+
+  /**
+   * Creates and returns the FormGroup for the login form.
+   * @private
    */
   private createLoginForm(): FormGroup {
     return this.fb.group({
@@ -66,92 +114,145 @@ export class Login implements OnInit, OnDestroy {
   }
 
   /**
-   * Checks if a form field is invalid and has been touched
+   * Subscribes to form value changes to clear the login error on user input.
+   * @private
+   */
+  private setupFormListeners(): void {
+    this.formChangesSubscription = this.loginForm.valueChanges.subscribe(() => {
+      if (this.loginError) this.loginError = '';
+    });
+  }
+
+  /**
+   * Checks if a form field is invalid and has been touched.
+   * @param {string} fieldName The name of the form control to check.
+   * @returns {boolean} True if an error should be displayed.
    */
   isFieldInvalid(fieldName: string): boolean {
     const field = this.loginForm.get(fieldName);
     return !!(field && field.invalid && field.touched);
   }
 
-  /**
-   * Toggles password visibility
+  /** 
+   * Toggles the visibility of the password in the password input field. 
    */
   togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
 
+  // =================================================================
+  // Form Submission
+  // =================================================================
+
   /**
-   * Handles form submission
+   * Orchestrates the form submission process.
    */
   async onSubmit(): Promise<void> {
     if (this.loginForm.invalid) {
       this.markAllFieldsAsTouched();
       return;
     }
+    await this.performLogin();
+  }
 
+  /**
+   * Handles the core logic of the API request for logging in.
+   * @private
+   */
+  private async performLogin(): Promise<void> {
     this.isSubmitting = true;
     this.loginError = '';
 
     try {
       const { email, password } = this.loginForm.value;
       const result = await lastValueFrom(this.authService.login(email, password));
-      
-      if (result.success) {
-        // Navigation zu Videos
-        this.router.navigate(['/videos']);
-      } else {
-        this.loginError = result.message || 'Login failed. Please try again.';
-      }
+      this.handleLoginResponse(result);
     } catch (error: any) {
-      this.loginError = error.message || 'Login failed. Please try again.';
+      this.handleLoginError(error.message);
     } finally {
       this.isSubmitting = false;
     }
   }
 
   /**
-   * Marks all form fields as touched to trigger validation display
+   * Processes the response from the login API call.
+   * @private
+   * @param {ApiResponse} response The response from the AuthService.
+   */
+  private handleLoginResponse(response: ApiResponse): void {
+    if (response.success) {
+      this.router.navigate(['/videos']);
+    } else {
+      this.handleLoginError(response.message);
+    }
+  }
+
+  /**
+   * Handles a failed login attempt by displaying an error message.
+   * @private
+   * @param {string} [message] The optional error message to display.
+   */
+  private handleLoginError(message?: string): void {
+    this.loginError = message || 'Login failed. Please try again.';
+  }
+
+  /**
+   * Marks all form fields as touched to display validation errors.
+   * @private
    */
   private markAllFieldsAsTouched(): void {
-    Object.keys(this.loginForm.controls).forEach((key) => {
-      this.loginForm.get(key)?.markAsTouched();
+    Object.values(this.loginForm.controls).forEach(control => {
+      control.markAsTouched();
+    });
+  }
+
+  // =================================================================
+  // Success Message Handling
+  // =================================================================
+
+  /**
+   * Checks for a 'message' query parameter to display a temporary success notification.
+   * @private
+   */
+  private checkForSuccessMessage(): void {
+    this.route.queryParams.pipe(take(1)).subscribe((params: Params) => {
+      if (params['message']) {
+        this.displaySuccessMessage(params['message']);
+      }
+    });
+  }
+  
+  /**
+   * Displays the success message, cleans the URL, and starts a timer to hide it.
+   * @private
+   * @param {string} message The message to display.
+   */
+  private displaySuccessMessage(message: string): void {
+    this.successMessage = message;
+    this.clearSuccessMessageFromUrl();
+    this.startSuccessMessageTimer();
+  }
+
+  /**
+   * Removes the 'message' query parameter from the URL without reloading the page.
+   * @private
+   */
+  private clearSuccessMessageFromUrl(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { message: null },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
     });
   }
 
   /**
-   * Checks for a success message from query parameters and displays it.
-   * The message automatically fades out and is removed.
+   * Sets a timeout to clear the success message from the view after 5 seconds.
+   * @private
    */
-  private checkForSuccessMessage(): void {
-    this.route.queryParams.pipe(take(1)).subscribe((params) => {
-      if (params['message']) {
-        this.successMessage = params['message'];
-
-        // URL sofort bereinigen
-        this.router.navigate([], {
-          relativeTo: this.route,
-          queryParams: { message: null },
-          queryParamsHandling: 'merge',
-          replaceUrl: true,
-        });
-
-        // EINZIGER Timer: Entfernt die Nachricht aus dem DOM, nachdem die
-        // 5-sekündige CSS-Animation beendet ist.
-        this.successTimer = window.setTimeout(() => {
-          this.successMessage = '';
-        }, 5000); // Muss exakt mit der Dauer der CSS-Animation übereinstimmen
-      }
-    });
-  }
-
-  ngOnDestroy(): void {
-    // Bereinigt den Timer, falls der Nutzer die Seite vorher verlässt
-    if (this.successTimer) {
-      clearTimeout(this.successTimer);
-    }
-
-    if (this.formChangesSubscription) {
-      this.formChangesSubscription.unsubscribe();
-    }
+  private startSuccessMessageTimer(): void {
+    this.successTimer = window.setTimeout(() => {
+      this.successMessage = '';
+    }, 5000); // Must match the CSS animation duration.
   }
 }

@@ -14,10 +14,10 @@
 
     <!-- Success Message von Forgot Password -->
     @if (successMessage) {
-      <div class="success_message">
-        <div class="success-icon"></div>
-        <div class="success-text">{{ successMessage }}</div>
-      </div>
+    <div class="success_message">
+      <div class="success-icon"></div>
+      <div class="success-text">{{ successMessage }}</div>
+    </div>
     }
 
     <!-- Email Field -->
@@ -50,7 +50,9 @@
         (click)="togglePassword()"
         class="password_eye"
         [src]="
-          showPassword ? '/assets/icons/visibility_off.svg' : '/assets/icons/visibility.svg'
+          showPassword
+            ? '/assets/icons/visibility_off.svg'
+            : '/assets/icons/visibility.svg'
         "
         alt="Toggle password visibility"
       />
@@ -62,10 +64,10 @@
     } 
     @if (isFieldInvalid('email')) {
     <p class="error_label">Please enter a valid email address.</p>
-    }
+    } 
     @if (isFieldInvalid('password')) {
-<p class="error_label">Password is required.</p>
-}
+    <p class="error_label">Password is required.</p>
+    }
 
     <!-- Submit Button and Forgot Password -->
     <div class="form_actions">
@@ -89,6 +91,5 @@
     </div>
   </form>
 </main>
-
 
 <app-footer></app-footer>
