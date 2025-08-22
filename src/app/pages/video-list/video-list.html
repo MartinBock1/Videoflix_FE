@@ -1,19 +1,5 @@
-<div class="video-list-container">
-  <!-- Header -->
-  <!-- <header class="header">
-    <div class="logo">
-      <img src="/assets/icons/logo_icon.svg" alt="Videofix" />
-      <span>Videoflix</span>
-    </div>
-    <div class="header-actions">
-      <span>{{ currentUser?.first_name || currentUser?.email }}</span>
-      <button (click)="logout()" class="logout-btn">
-        <img src="/assets/icons/logout.svg" alt="Logout" />
-      </button>
-    </div>
-  </header> -->
-  <app-header></app-header>
-
+<app-header></app-header>
+<div class="video-list-container"> 
   <!-- Main Video Player -->
   @if (currentVideo$ | async; as currentVideo) {
     <section class="main-video">

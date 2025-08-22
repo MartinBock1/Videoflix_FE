@@ -42,7 +42,9 @@
         (click)="togglePassword()"
         class="password_eye"
         [src]="
-          showPassword ? '/assets/icons/visibility_off.svg' : '/assets/icons/visibility.svg'
+          showPassword
+            ? '/assets/icons/visibility_off.svg'
+            : '/assets/icons/visibility.svg'
         "
         alt="Toggle password visibility"
       />
@@ -107,6 +109,10 @@
       <p class="error_label">You must accept the privacy policy to continue.</p>
       }
     </div>
+
+    @if (errorMessage) {
+    <p class="login_error">{{ errorMessage }}</p>
+    }
 
     <!-- Submit Button -->
     <div class="form_actions">
