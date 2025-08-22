@@ -8,13 +8,12 @@ import { AuthService } from '../../shared/services/auth.service';
 import { Video, User } from '../../shared/interfaces/api.interfaces';
 import { VideoCard } from './video-card/video-card';
 import { VideoPlayer } from './video-player/video-player';
-import { Header } from '../../shared/header/header';
 import { Footer } from '../../shared/footer/footer';
 
 @Component({
   selector: 'app-video-list',
   standalone: true,
-  imports: [CommonModule, VideoCard, VideoPlayer, Header, Footer],
+  imports: [CommonModule, VideoCard, VideoPlayer, Footer],
   templateUrl: './video-list.html',
   styleUrls: ['./video-list.scss'],
 })

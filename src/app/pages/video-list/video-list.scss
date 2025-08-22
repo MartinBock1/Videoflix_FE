@@ -1,60 +1,61 @@
 @import './../../../styles.scss';
 
 :host {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background: #000;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    min-height: 100vh;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #000;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
+
+.main_header.video-list-header {
+  padding: 24px 48px;
+  position: relative;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+
+  .logo-desktop {
+    height: 28px;
+    display: block;
+  }
+
+  .logo-mobile {
+    height: 28px;
+    display: none;
+  }
+
+  .logout-button {
+    @include flex-center($gap: 8px);
+
+    .action-icon {
+      width: 24px;
+      height: 24px;
+      background-color: transparent;
+    }
+
+    span {
+      font-weight: 700;
+    }
+  }
 }
 
 .video-list-container {
-    flex: 1;
-    padding: 48px;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.logo img {
-  height: 2rem;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.logout-btn {
-  background: none;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 4px;
-  transition: background-color 0.2s;
-}
-
-.logout-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.logout-btn img {
-  height: 1.5rem;
-  filter: invert(1);
+  flex: 1;
+  padding: 48px;
 }
 
 .main-video {
-  height: 70vh;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 70vh;
   margin-bottom: 2rem;
 }
 
@@ -97,8 +98,13 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .error {
@@ -129,4 +135,36 @@
 
 .retry-btn:hover {
   background: #f40612;
+}
+
+
+@media only screen and (max-width: 769px) {
+  .main_header.video-list-header {
+    padding: 16px 32px;
+
+    .logo-desktop {
+      display: none;
+    }
+
+    .logo-mobile {
+      display: block;
+    }
+  }
+}
+
+@media only screen and (max-width: 500px) {
+
+  .video-list-container {
+    padding: 40px 10px;
+  }
+
+  .video-categories {
+    padding: 0;
+  }
+
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
 }

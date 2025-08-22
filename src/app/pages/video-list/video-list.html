@@ -1,68 +1,84 @@
-<app-header></app-header>
-<div class="video-list-container"> 
+<header class="main_header video-list-header">
+  <!-- Logo-Sektion (bleibt gleich) -->
+  <a aria-label="main page" routerLink="/">
+    <img
+      src="/assets/icons/logo_icon_small.svg"
+      alt="Videoflix Logo"
+      class="logo-mobile"
+    />
+    <img
+      src="/assets/icons/logo_icon.svg"
+      alt="Videoflix Logo"
+      class="logo-desktop"
+    />
+  </a>
+
+  <!-- Aktionen-Sektion (jetzt mit Logout-Button) -->
+  <div class="head_content_right">
+    <button (click)="logout()" class="actionLink-button logout-button">
+      <img src="/assets/icons/logout.svg" alt="" class="action-icon" />
+      <span>Log out</span>
+    </button>
+  </div>
+</header>
+<div class="video-list-container">
   <!-- Main Video Player -->
   @if (currentVideo$ | async; as currentVideo) {
-    <section class="main-video">
-      <app-video-player 
-        [video]="currentVideo"
-        [isMainPlayer]="true"
-        (playVideo)="onPlayVideo($event)">
-      </app-video-player>
-    </section>
+  <section class="main-video">
+    <app-video-player
+      [video]="currentVideo"
+      [isMainPlayer]="true"
+      (playVideo)="onPlayVideo($event)"
+    >
+    </app-video-player>
+  </section>
   }
 
   <!-- Video Categories -->
   <main class="video-categories">
     <!-- Latest Videos Section -->
-    @if (latestVideos$ | async; as latestVideos) {
-      @if (latestVideos.length > 0) {
-        <section class="category-section">
-          <h2>Neueste Videos</h2>
-          <div class="video-grid">
-            @for (video of latestVideos; track video.id) {
-              <app-video-card 
-                [video]="video"
-                (playVideo)="onPlayVideo($event)">
-              </app-video-card>
-            }
-          </div>
-        </section>
-      }
-    }
+    @if (latestVideos$ | async; as latestVideos) { @if (latestVideos.length > 0)
+    {
+    <section class="category-section">
+      <h2>Neueste Videos</h2>
+      <div class="video-grid">
+        @for (video of latestVideos; track video.id) {
+        <app-video-card [video]="video" (playVideo)="onPlayVideo($event)">
+        </app-video-card>
+        }
+      </div>
+    </section>
+    } }
 
     <!-- Category Sections -->
     @for (category of categories; track category) {
-      <section 
-        class="category-section" 
-        [attr.data-category]="category">
-        <h2>{{ getCategoryDisplayName(category) }}</h2>
-        <div class="video-grid">
-          @for (video of getVideosByCategory(category); track video.id) {
-            <app-video-card 
-              [video]="video"
-              (playVideo)="onPlayVideo($event)">
-            </app-video-card>
-          }
-        </div>
-      </section>
+    <section class="category-section" [attr.data-category]="category">
+      <h2>{{ getCategoryDisplayName(category) }}</h2>
+      <div class="video-grid">
+        @for (video of getVideosByCategory(category); track video.id) {
+        <app-video-card [video]="video" (playVideo)="onPlayVideo($event)">
+        </app-video-card>
+        }
+      </div>
+    </section>
     }
   </main>
 
   <!-- Loading State -->
   @if (isLoading) {
-    <div class="loading">
-      <div class="spinner"></div>
-      <p>Videos werden geladen...</p>
-    </div>
+  <div class="loading">
+    <div class="spinner"></div>
+    <p>Videos werden geladen...</p>
+  </div>
   }
 
   <!-- Error State -->
   @if (errorMessage) {
-    <div class="error">
-      <img src="/assets/img/warning.png" alt="Error" />
-      <p>{{ errorMessage }}</p>
-      <button (click)="loadVideos()" class="retry-btn">Erneut versuchen</button>
-    </div>
+  <div class="error">
+    <img src="/assets/img/warning.png" alt="Error" />
+    <p>{{ errorMessage }}</p>
+    <button (click)="loadVideos()" class="retry-btn">Erneut versuchen</button>
+  </div>
   }
 </div>
 <app-footer></app-footer>
