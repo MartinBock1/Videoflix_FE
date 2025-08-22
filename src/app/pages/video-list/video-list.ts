@@ -39,7 +39,6 @@ export class VideoList implements OnInit, OnDestroy {
     this.videos$ = this.videoService.videos$;
     this.latestVideos$ = this.videoService.latestVideos$;
     this.currentVideo$ = this.videoService.currentVideo$;
-    // this.currentUser = this.authService.getCurrentUser();
   }
 
   ngOnInit(): void {

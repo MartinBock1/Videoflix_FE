@@ -27,13 +27,3 @@
 @mixin flex-center-end {
     @include flex-center(center, flex-end);
 }
-
-// // Media Query Mixins
-// @mixin mobile {
-//   @media screen and (max-width: 769px) {
-//     $form-pad: 32px;
-//     $form-pad-small: 8px;
-//     $form-input-pad: 8px 8px;
-//     @content;
-//   }
-// }
