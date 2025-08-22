@@ -14,11 +14,11 @@
     <!-- Custom Controls Overlay -->
      @if(!showControls) {
        <div class="video-overlay" (click)="onVideoClick()">
-        @if(!isPlaying) {
+        <!-- @if(!isPlaying) {
           <div class="play-button">
             <img src="/assets/icons/play_arrow.svg" alt="Play" />
           </div>
-        }
+        } -->
          
          <!-- Video Info -->
           @if(isMainPlayer) {
@@ -28,7 +28,7 @@
                 <p>{{ video?.description }}</p>
               }
               <div class="video-actions">
-                <button class="play-btn" (click)="togglePlay($event)">
+                <button class="actionLink-button" (click)="togglePlay($event)">
                   <img [src]="isPlaying ? '/assets/icons/pause.svg' : '/assets/icons/play_arrow.svg'" alt="Play/Pause" />
                   {{ isPlaying ? 'Pause' : 'Play' }}
                 </button>

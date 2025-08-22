@@ -178,6 +178,8 @@ export class VideoPlayer
     } else {
       this.play();
     }
+
+    this.showControlsTemporarily();
   }
 
   private play(): void {

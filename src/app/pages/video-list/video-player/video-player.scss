@@ -5,10 +5,6 @@
     background: #000;
 }
 
-.main-player {
-    height: 70vh;
-}
-
 .video-container {
     position: relative;
     width: 100%;
@@ -32,29 +28,7 @@ video {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-}
-
-.play-button {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.7);
-    border-radius: 50%;
-    padding: 2rem;
-    transition: all 0.2s;
-}
-
-.play-button:hover {
-    background: rgba(0, 0, 0, 0.9);
-    transform: translate(-50%, -50%) scale(1.1);
-}
-
-.play-button img {
-    width: 3rem;
-    height: 3rem;
-    filter: invert(1);
-}
+} 
 
 .video-info-overlay {
     position: absolute;
@@ -85,30 +59,31 @@ video {
     gap: 1rem;
 }
 
-.play-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: #e50914;
-    color: #fff;
-    border: none;
-    padding: 0.75rem 2rem;
-    border-radius: 4px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
+// .play-btn {
+//     @include flex-center($gap: 0.5rem);
+//     // display: flex;
+//     // align-items: center;
+//     // gap: 0.5rem;
+//     background: #e50914;
+//     color: #fff;
+//     border: none;
+//     padding: 0.75rem 2rem;
+//     border-radius: 4px;
+//     font-size: 1.1rem;
+//     font-weight: 600;
+//     cursor: pointer;
+//     transition: background-color 0.2s;
+// }
 
-.play-btn:hover {
-    background: #f40612;
-}
+// .play-btn:hover {
+//     background: #f40612;
+// }
 
-.play-btn img {
-    width: 1.5rem;
-    height: 1.5rem;
-    filter: invert(1);
-}
+// .play-btn img {
+//     width: 1.5rem;
+//     height: 1.5rem;
+//     filter: invert(1);
+// }
 
 .loading-overlay {
     position: absolute;
