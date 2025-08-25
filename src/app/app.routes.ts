@@ -30,12 +30,15 @@ export const routes: Routes = [
   { path: 'auth/login', component: Login },
   { path: 'auth/register', component: Register },
   { path: 'auth/activate', component: Activate },
+  // Legacy route to support links from backend emails.
   { path: 'auth/activate.html', component: Activate },
   { path: 'auth/forgot-password', component: ForgotPassword },
-  { path: 'auth/forgot_password.html', component: ForgotPassword }, // Backend verwendet Unterstrich!
+  // Legacy route for password reset, as the backend may use underscores.
+  { path: 'auth/forgot_password.html', component: ForgotPassword },
   { path: 'auth/confirm-password', component: ConfirmPassword },
+  // Legacy routes for password confirmation.
   { path: 'auth/confirm-password.html', component: ConfirmPassword },
-  { path: 'auth/confirm_password.html', component: ConfirmPassword }, // Backend verwendet Unterstrich!
+  { path: 'auth/confirm_password.html', component: ConfirmPassword },
 
   // Static informational pages.
   { path: 'privacy', component: Privacy },

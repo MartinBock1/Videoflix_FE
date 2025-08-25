@@ -10,6 +10,14 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { authInterceptor } from './shared/interceptors/auth.interceptor';
 import { routes } from './app.routes';
 
+/**
+ * @const {ApplicationConfig} appConfig
+ *
+ * @description
+ * The main configuration object for the Angular application, defining the root providers
+ * for essential services and features. This setup is used for bootstrapping the standalone
+ * application.
+ */
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),
