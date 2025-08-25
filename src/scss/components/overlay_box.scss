@@ -32,7 +32,7 @@
 
         input {
             width: 100%;
-            padding: 20px 16px 8px 48px;
+            padding: 14px 16px 14px 48px;
             background: transparent;
             border: none;
             outline: none;
@@ -50,19 +50,11 @@
             left: 48px;
             top: 50%;
             transform: translateY(-50%);
-            color: rgba(255, 255, 255, 0.7);
+            color: transparent;
             font-size: 16px;
             pointer-events: none;
             transition: all 0.3s ease;
             z-index: 2;
-        }
-
-        input:focus+label,
-        input:not(:placeholder-shown)+label {
-            top: 8px;
-            transform: translateY(0);
-            font-size: 12px;
-            color: $font-sec-color;
         }
 
         // Focus State

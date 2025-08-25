@@ -168,7 +168,7 @@ export class Login implements OnInit, OnDestroy {
       const result = await lastValueFrom(this.authService.login(email, password));
       this.handleLoginResponse(result);
     } catch (error: any) {
-      this.handleLoginError(error.message);
+      this.handleLoginError(error);
     } finally {
       this.isSubmitting = false;
     }
@@ -183,7 +183,7 @@ export class Login implements OnInit, OnDestroy {
     if (response.success) {
       this.router.navigate(['/videos']);
     } else {
-      this.handleLoginError(response.message);
+      this.handleLoginError(response);
     }
   }
 
@@ -192,8 +192,8 @@ export class Login implements OnInit, OnDestroy {
    * @private
    * @param {string} [message] The optional error message to display.
    */
-  private handleLoginError(message?: string): void {
-    this.loginError = message || 'Login failed. Please try again.';
+  private handleLoginError(error?: any): void {
+    this.loginError = error?.message || 'Login failed. Please try again.';
   }
 
   /**

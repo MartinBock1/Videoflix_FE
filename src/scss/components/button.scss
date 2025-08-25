@@ -12,6 +12,11 @@
     &:hover {
         background-color: $btn-prime-hover-color;
     }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
 }
 
 .actionLink-button {
@@ -31,6 +36,11 @@
 
     &:hover {
         background-color: $btn-prime-hover-color;
+    }
+
+     &:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
     }
 
     // Icon Mode für Header (quadratisch, weniger Padding)
