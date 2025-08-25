@@ -41,7 +41,7 @@
             z-index: 1;
 
             &::placeholder {
-                color: $form-placeholder-color;
+                color: transparent;
             }
         }
 
@@ -50,11 +50,16 @@
             left: 48px;
             top: 50%;
             transform: translateY(-50%);
-            color: transparent;
+            color: $form-placeholder-color;
             font-size: 16px;
             pointer-events: none;
             transition: all 0.3s ease;
             z-index: 2;
+        }
+
+        input:focus + label,
+        input:not(:placeholder-shown) + label {
+            opacity: 0;
         }
 
         // Focus State
