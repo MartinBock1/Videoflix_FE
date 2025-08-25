@@ -28,6 +28,10 @@
     font-size: 18px;
     color: $btn-prime-font-color;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 
     .actionLink {
         color: $btn-prime-font-color;
@@ -38,7 +42,7 @@
         background-color: $btn-prime-hover-color;
     }
 
-     &:disabled {
+    &:disabled {
         cursor: not-allowed;
         opacity: 0.6;
     }
@@ -52,7 +56,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        
+
         .actionLink {
             display: flex;
             align-items: center;

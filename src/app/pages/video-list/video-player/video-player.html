@@ -1,64 +1,73 @@
 <div class="video-player" [class.main-player]="isMainPlayer">
   <div class="video-container">
-    <video 
+    <video
       #videoElement
       [poster]="video?.thumbnail_url"
       [controls]="showControls"
       (click)="onVideoClick()"
+      (play)="isPlaying = true"
+      (pause)="isPlaying = false"
       (loadstart)="onLoadStart()"
       (loadeddata)="onLoadedData()"
-      (error)="onVideoError($event)">
+      (error)="onVideoError($event)"
+    >
       Your browser does not support the video tag.
     </video>
-    
+
     <!-- Custom Controls Overlay -->
-     @if(!showControls) {
-       <div class="video-overlay" (click)="onVideoClick()">         
-         <!-- Video Info -->
-          @if(isMainPlayer) {
-            <div class="video-info-overlay">
-              <h1>{{ video?.title }}</h1>
-              @if(video?.description) {
-                <p>{{ video?.description }}</p>
-              }
-              <div class="video-actions">
-                <button class="actionLink-button" (click)="togglePlay($event)">
-                  <img [src]="isPlaying ? '/assets/icons/pause.svg' : '/assets/icons/play_arrow.svg'" alt="Play/Pause" />
-                  {{ isPlaying ? 'Pause' : 'Play' }}
-                </button>
-              </div>
-            </div>
-          }
-       </div>
-     }
+    @if(!showControls) {
+    <div class="video-overlay" (click)="onVideoClick()">
+      <!-- Video Info -->
+      @if(isMainPlayer) {
+      <div class="video-info-overlay">
+        <h1>{{ video?.title }}</h1>
+        @if(video?.description) {
+        <p>{{ video?.description }}</p>
+        }
+        <div class="video-actions">
+          <button class="actionLink-button" (click)="togglePlay($event)">
+            <img
+              [src]="
+                isPlaying
+                  ? '/assets/icons/pause.svg'
+                  : '/assets/icons/play_arrow.svg'
+              "
+              alt="Play/Pause"
+            />
+            {{ isPlaying ? "Pause" : "Play" }}
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+    }
 
     <!-- Loading State -->
-     @if(isLoading) {
-         <div class="loading-overlay">
-           <div class="spinner"></div>
-         </div>
-     }
+    @if(isLoading) {
+    <div class="loading-overlay">
+      <div class="spinner"></div>
+    </div>
+    }
 
     <!-- Error State -->
-     @if(hasError) {
-         <div class="error-overlay">
-           <div class="error-content">
-             <img src="/assets/img/warning.png" alt="Error" />
-             <p>Video konnte nicht geladen werden</p>
-             <button (click)="retryLoad()">Erneut versuchen</button>
-           </div>
-         </div>
-     }
-
-    <!-- Resolution Selector -->
-     @if(showControls) {
-         <div class="resolution-selector">
-           <select (change)="onResolutionChange($event)" [value]="currentResolution">
-             <option value="480p">480p</option>
-             <option value="720p">720p</option>
-             <option value="1080p">1080p</option>
-           </select>
-         </div>
-     }
+    @if(hasError) {
+    <div class="error-overlay">
+      <div class="error-content">
+        <img src="/assets/img/warning.png" alt="Error" />
+        <p>Video konnte nicht geladen werden</p>
+        <button (click)="retryLoad()">Erneut versuchen</button>
+      </div>
+    </div>
+    }
   </div>
+  <!-- Resolution Selector -->
+  @if(showControls) {
+  <div class="resolution-selector">
+    <select (change)="onResolutionChange($event)" [value]="currentResolution">
+      <option value="480p">480p</option>
+      <option value="720p">720p</option>
+      <option value="1080p">1080p</option>
+    </select>
+  </div>
+  }
 </div>

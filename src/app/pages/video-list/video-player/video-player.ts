@@ -101,6 +101,7 @@ export class VideoPlayer
    * @type {boolean}
    */
   showControls = false;
+  
   /**
    * The currently selected video resolution (e.g., '720p').
    * @type {string}
@@ -139,7 +140,9 @@ export class VideoPlayer
    */
   ngOnInit(): void {
     this.setDefaultResolution();
-    this.showControls = !this.isMainPlayer;
+    if (this.isMainPlayer) {
+      this.showControls = false;
+    }
   }
 
   /**
@@ -293,7 +296,6 @@ export class VideoPlayer
   onVideoClick(): void {
     if (this.isMainPlayer) {
       this.togglePlay();
-      this.showControlsTemporarily();
     } else {
       this.playVideo.emit(this.video!);
     }
@@ -308,14 +310,15 @@ export class VideoPlayer
     if (event) {
       event.stopPropagation();
     }
+    
+    const video = this.videoElement.nativeElement;
 
-    if (this.isPlaying) {
-      this.pause();
+    if (video.paused) {
+      video.play();
+      this.showControlsTemporarily();
     } else {
-      this.play();
+      video.pause();
     }
-
-    this.showControlsTemporarily();
   }
 
   /**
@@ -332,16 +335,7 @@ export class VideoPlayer
         console.error('Play error:', error);
         this.hasError = true;
       });
-  }
-
-  /**
-   * Pauses video playback.
-   * @private
-   */
-  private pause(): void {
-    this.videoElement.nativeElement.pause();
-    this.isPlaying = false;
-  }
+  }  
 
   /**
    * Shows the video controls for a short duration (3 seconds) and then hides them if the video is playing.
@@ -355,7 +349,7 @@ export class VideoPlayer
     }
 
     this.controlsTimeout = setTimeout(() => {
-      if (this.isPlaying) {
+      if (!this.videoElement.nativeElement.paused) {
         this.showControls = false;
       }
     }, 3000);
