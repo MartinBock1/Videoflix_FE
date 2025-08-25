@@ -101,7 +101,7 @@ export class VideoPlayer
    * @type {boolean}
    */
   showControls = false;
-  
+
   /**
    * The currently selected video resolution (e.g., '720p').
    * @type {string}
@@ -146,23 +146,45 @@ export class VideoPlayer
   }
 
   /**
-   * Angular lifecycle hook that runs after the component's view has been initialized.
-   * Initiates the video loading process if a video is already present.
+   * An Angular lifecycle hook that runs once after the component's view and its
+   * child views have been fully initialized.
+   *
+   * This hook is used to load the initial video if it was provided as an input
+   * when the component was first created. It checks for the existence of the `video`
+   * property before proceeding.
+   *
+   * The call to `loadVideo()` is deferred with `setTimeout` to prevent an
+   * `ExpressionChangedAfterItHasBeenCheckedError`. This ensures that any state
+   * updates within `loadVideo()` (like setting `isLoading`) happen in a new
+   * change detection cycle, safely after the initial view setup and check.
+   *
+   * @returns {void}
    */
   ngAfterViewInit(): void {
     if (this.video) {
-      this.loadVideo();
+      setTimeout(() => this.loadVideo(), 0);
     }
   }
 
   /**
-   * Angular lifecycle hook that detects changes to @Input properties.
-   * If the `video` input changes, it reloads the player with the new video.
-   * @param {SimpleChanges} changes - An object containing the changed properties.
+   * An Angular lifecycle hook that runs when any data-bound input property changes.
+   *
+   * This method specifically checks for changes to the `video` input property. If the
+   * `video` property changes (and it's not the initial change, which is handled
+   * by `ngAfterViewInit`), it triggers the `loadVideo()` method to reload the player
+   * with the new video source.
+   *
+   * The call to `loadVideo()` is deferred with `setTimeout` to prevent an
+   * `ExpressionChangedAfterItHasBeenCheckedError`. This is a defensive measure
+   * ensuring that the component's internal state (like `isLoading`) is not updated
+   * within the same change detection cycle that delivered the new input.
+   *
+   * @param {SimpleChanges} changes - An object containing the current and previous values of the input properties that have changed.
+   * @returns {void}
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['video'] && !changes['video'].isFirstChange()) {
-      this.loadVideo();
+      setTimeout(() => this.loadVideo(), 0);
     }
   }
 
@@ -302,15 +324,26 @@ export class VideoPlayer
   }
 
   /**
-   * Toggles the video between playing and paused states.
-   * Also ensures the controls are shown temporarily on interaction.
-   * @param {Event} [event] - The optional click event to stop its propagation.
+   * Toggles the video playback state between playing and paused.
+   *
+   * This method serves as the central user-facing control for playback.
+   * It directly interacts with the native `<video>` element, checking its `paused`
+   * property to determine which action to take.
+   *
+   * If the video is paused, it begins playback and calls `showControlsTemporarily()`
+   * to briefly display the browser's native controls for immediate user feedback.
+   * If the video is already playing, it simply pauses it.
+   *
+   * @param {Event} [event] - The optional click event, typically passed from the template.
+   *   If provided, `event.stopPropagation()` is called to prevent the click from
+   *   bubbling up to parent elements and causing unintended side effects.
+   * @returns {void} This method does not return a value.
    */
   togglePlay(event?: Event): void {
     if (event) {
       event.stopPropagation();
     }
-    
+
     const video = this.videoElement.nativeElement;
 
     if (video.paused) {
@@ -335,7 +368,7 @@ export class VideoPlayer
         console.error('Play error:', error);
         this.hasError = true;
       });
-  }  
+  }
 
   /**
    * Shows the video controls for a short duration (3 seconds) and then hides them if the video is playing.

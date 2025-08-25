@@ -10,12 +10,23 @@ import { Imprint } from './shared/imprint/imprint';
 import { AuthGuard } from './shared/guards/auth.guard';
 import { VideoList } from './pages/video-list/video-list';
 
-
+/**
+ * @const {Routes} routes
+ *
+ * @description
+ * Defines the routing configuration for the entire application. This array of route
+ * objects maps URL paths to their corresponding Angular components. It also specifies
+ * route guards (`canActivate`) to protect certain routes from unauthorized access.
+ */
 export const routes: Routes = [
-  // Landing Page (Öffentlich zugänglich)
+  // =================================================================
+  // Publicly Accessible Routes
+  // =================================================================
+
+  // The main landing page of the application.
   { path: '', component: Main },
 
-  // Auth-Routen (Öffentlich - für nicht eingeloggte Benutzer)
+   // Authentication-related routes, accessible to unauthenticated users./
   { path: 'auth/login', component: Login },
   { path: 'auth/register', component: Register },
   { path: 'auth/activate', component: Activate },
@@ -26,18 +37,23 @@ export const routes: Routes = [
   { path: 'auth/confirm-password.html', component: ConfirmPassword },
   { path: 'auth/confirm_password.html', component: ConfirmPassword }, // Backend verwendet Unterstrich!
 
-  // Statische Seiten (Öffentlich)
+  // Static informational pages.
   { path: 'privacy', component: Privacy },
   { path: 'imprint', component: Imprint },
 
-  // Geschützte Routen würden hier mit AuthGuard kommen
-  // { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+  // =================================================================
+  // Protected Routes (Require Authentication)
+  // =================================================================
+  // The main video listing page, accessible only to authenticated users.
   {
     path: 'videos',
     component: VideoList,
     canActivate: [AuthGuard],
   },
 
-  // Fallback - redirect to home
+  // =================================================================
+  // Wildcard / Fallback Route
+  // =================================================================
+  // wildcard route that matches any path not defined above
   { path: '**', redirectTo: '' },
 ];
